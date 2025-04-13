@@ -1,0 +1,21 @@
+{
+    "name": "iceylan/urlify",
+    "description": "Modern PHP URL parser with modular components.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Iceylan\\Urlify\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ismail Ceylan",
+            "email": "ismaillceylan@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "larapack/dd": "^1.1"
+    }
+}
