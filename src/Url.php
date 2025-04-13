@@ -35,6 +35,13 @@ class Url
 	public Scheme $scheme;
 
 	/**
+	 * The host of the URL.
+	 *
+	 * @var Auth
+	 */
+	public Auth $auth;
+
+	/**
 	 * Auto-detects the scheme of the URL.
 	 * 
 	 * @var int
@@ -54,6 +61,11 @@ class Url
 		$this->parts = parse_url( $this->original );
 
 		$this->scheme = new Scheme( $this->parts[ 'scheme' ]);
+		
+		$this->auth = new Auth(
+			$this->parts[ 'user' ] ?? null,
+			$this->parts[ 'pass' ] ?? null
+		);
 
 		$this->validate();
 	}
