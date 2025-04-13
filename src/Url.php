@@ -28,6 +28,13 @@ class Url
 	private array $parts;
 
 	/**
+	 * The scheme of the URL.
+	 *
+	 * @var Scheme
+	 */
+	public Scheme $scheme;
+
+	/**
 	 * Auto-detects the scheme of the URL.
 	 * 
 	 * @var int
@@ -45,6 +52,8 @@ class Url
 		$this->options = $options;
 		$this->original = $this->normalize( $url );
 		$this->parts = parse_url( $this->original );
+
+		$this->scheme = new Scheme( $this->parts[ 'scheme' ]);
 
 		$this->validate();
 	}
