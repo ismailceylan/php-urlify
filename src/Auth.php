@@ -2,10 +2,12 @@
 
 namespace Iceylan\Urlify;
 
+use JsonSerializable;
+
 /**
  * Represents authentication parts of a URL.
  */
-class Auth
+class Auth implements JsonSerializable
 {
 	/**
 	 * The username of the user.
@@ -29,8 +31,8 @@ class Auth
 	 */
 	public function __construct( ?string $user, ?string $pass )
 	{
-		$this->user = $user;
-		$this->pass = $pass;
+		$this->user = $user == '' ? null : $user;
+		$this->pass = $pass == '' ? null : $pass;
 	}
 
 	/**
@@ -73,5 +75,21 @@ class Auth
 	public function __toString()
 	{
 		return $this->user . ':' . $this->pass;
+	}
+
+	/**
+	 * Returns the authentication parts of the URL as an associative array.
+	 *
+	 * The returned array has two keys, "user" and "pass", which are the username and the password,
+	 * respectively. If either of them is not set, the corresponding value will be null.
+	 *
+	 * @return array The authentication parts of the URL as an associative array.
+	 */
+	public function jsonSerialize(): array
+	{
+		return [
+			'user' => $this->user,
+			'pass' => $this->pass,
+		];
 	}
 }

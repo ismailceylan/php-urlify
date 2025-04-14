@@ -67,6 +67,7 @@ class Url
 		$this->original = $this->normalize( $url );
 		$this->parts = parse_url( $this->original );
 
+		$this->scheme = new Scheme( $this->parts[ 'scheme' ] ?? '' );
 		$this->host = new Host( $this->parts[ 'host' ]);
 
 		$this->auth = new Auth(

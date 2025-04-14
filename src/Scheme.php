@@ -2,10 +2,12 @@
 
 namespace Iceylan\Urlify;
 
+use JsonSerializable;
+
 /**
  * Represents a URL scheme.
  */
-class Scheme
+class Scheme implements JsonSerializable
 {
 	/**
 	 * The scheme of the URL.
@@ -65,6 +67,18 @@ class Scheme
 	 * @return string The scheme, e.g., "http" or "https".
 	 */
 	public function __toString(): string
+	{
+		return $this->scheme;
+	}
+
+	/**
+	 * @inheritDoc
+	 * 
+	 * Returns the scheme as a string.
+	 * 
+	 * @return string The scheme, e.g., "http" or "https".
+	 */
+	public function jsonSerialize(): string
 	{
 		return $this->scheme;
 	}
