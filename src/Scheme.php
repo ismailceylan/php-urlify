@@ -23,7 +23,53 @@ class Scheme implements JsonSerializable
 	 */
 	protected const KNOWN_SCHEMES =
 	[
-        'http', 'https', 'ftp', 'mailto', 'file', 'tel', 'data', 'irc', 'ssh', 'webcal'
+		// web protocols
+		'http',
+		'https',
+		'ws',
+		'wss',
+
+		// file transfer protocols
+		'ftp',
+		'ftps',
+		'sftp',
+		'scp',
+		'tftp',
+
+		// database connection protocols
+		'mysql',
+		'pgsql',
+		'postgres',
+		'sqlite',
+		'mongodb',
+		'redis',
+		'mssql',
+
+		// application & service protocols
+		'ssh',
+		'telnet',
+		'ldap',
+		'smb',
+		'nfs',
+
+		// email and communication protocols
+		'mailto',
+		'tel',
+		'sms',
+		'sip',
+
+		// file system and special URI protocols
+		'file',
+		'data',
+		'blob',
+		'urn',
+
+		// other (some platforms or frameworks use these)
+		'chrome',
+		'about',
+		'geo',
+		'javascript',
+		'intent',
     ];
 
 	/**
