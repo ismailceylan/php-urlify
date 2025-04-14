@@ -67,15 +67,27 @@ class Url
 		$this->original = $this->normalize( $url );
 		$this->parts = parse_url( $this->original );
 
-		$this->scheme = new Scheme( $this->parts[ 'scheme' ] ?? '' );
-		$this->host = new Host( $this->parts[ 'host' ]);
+		$this->scheme = new Scheme( $this->part( 'scheme', '' ));
+		$this->host = new Host( $this->part( 'host' ));
 
 		$this->auth = new Auth(
-			$this->parts[ 'user' ] ?? null,
-			$this->parts[ 'pass' ] ?? null
+			$this->part( 'user', null ),
+			$this->part( 'pass', null ) 
 		);
 
 		$this->validate();
+	}
+
+	/**
+	 * Returns the value of the given key from the parsed URL.
+	 * 
+	 * @param string $key the key to be retrieved
+	 * @param mixed $default the default value if the key does not exist
+	 * @return string|null the value of the given key if it exists, null otherwise
+	 */
+	private function part( string $key, mixed $default = null ): ?string
+	{
+		return $this->parts[ $key ] ?? $default;
 	}
 
 	/**
