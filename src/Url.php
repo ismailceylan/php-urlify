@@ -49,6 +49,13 @@ class Url
 	public Host $host;
 
 	/**
+	 * The port of the URL.
+	 *
+	 * @var Port
+	 */
+	public Port $port;
+
+	/**
 	 * Auto-detects the scheme of the URL.
 	 * 
 	 * @var int
@@ -73,6 +80,11 @@ class Url
 		$this->auth = new Auth(
 			$this->part( 'user', null ),
 			$this->part( 'pass', null ) 
+		);
+
+		$this->port = new Port(
+			$this->part( 'port', null ),
+			$this->scheme
 		);
 
 		$this->validate();
