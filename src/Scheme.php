@@ -122,10 +122,15 @@ class Scheme implements JsonSerializable
 	 * 
 	 * Returns the scheme as a string.
 	 * 
-	 * @return string The scheme, e.g., "http" or "https".
+	 * @return array The scheme, e.g., "http" or "https".
 	 */
-	public function jsonSerialize(): string
+	public function jsonSerialize(): array
 	{
-		return $this->scheme;
+		return
+		[
+			'name' => $this->scheme,
+			'isSecure' => $this->isSecure(),
+			'isKnown' => $this->isKnown()
+		];
 	}
 }
