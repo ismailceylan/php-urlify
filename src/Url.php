@@ -3,6 +3,7 @@
 namespace Iceylan\Urlify;
 
 use InvalidArgumentException;
+use Iceylan\Urlify\Path\Path;
 
 class Url
 {
@@ -56,6 +57,13 @@ class Url
 	public Port $port;
 
 	/**
+	 * The path of the URL.
+	 *
+	 * @var Path
+	 */
+	public Path $path;
+
+	/**
 	 * Auto-detects the scheme of the URL.
 	 * 
 	 * @var int
@@ -85,6 +93,10 @@ class Url
 		$this->port = new Port(
 			$this->part( 'port', null ),
 			$this->scheme
+		);
+
+		$this->path = new Path(
+			$this->part( 'path', '' )
 		);
 
 		$this->validate();
