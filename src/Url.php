@@ -72,6 +72,13 @@ class Url
 	public Query $query;
 
 	/**
+	 * The fragment of the URL.
+	 *
+	 * @var Fragment
+	 */
+	public Fragment $fragment;
+
+	/**
 	 * Auto-detects the scheme of the URL.
 	 * 
 	 * @var int
@@ -109,6 +116,10 @@ class Url
 
 		$this->query = new Query(
 			$this->part( 'query' )
+		);
+
+		$this->fragment = new Fragment(
+			$this->part( 'fragment' )
 		);
 
 		$this->validate();
