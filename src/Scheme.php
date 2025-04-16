@@ -73,6 +73,28 @@ class Scheme implements JsonSerializable
     ];
 
 	/**
+	 * An array of schemes that have a colon prefix.
+	 * 
+	 * @var array
+	 */
+	const COLON_SCHEMES = [
+		'mailto',
+		'tel',
+		'sms',
+		'sip',
+		'urn',
+		'data',
+		'blob',
+		'geo',
+		'about',
+		'javascript',
+		'intent',
+		'ssh',
+		'scp',
+		'sqlite',
+	];
+
+	/**
 	 * Constructs a new Scheme object.
 	 *
 	 * @param string $scheme The scheme to be set, e.g., "http" or "https".
@@ -110,11 +132,11 @@ class Scheme implements JsonSerializable
 	/**
 	 * Returns the scheme as a string.
 	 *
-	 * @return string The scheme, e.g., "http" or "https".
+	 * @return string The scheme, e.g., "http://" or "https://".
 	 */
 	public function __toString(): string
 	{
-		return $this->scheme;
+		return $this->scheme . ( in_array( $this->scheme, self::COLON_SCHEMES )? ':' : '://' );
 	}
 
 	/**
