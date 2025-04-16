@@ -127,7 +127,7 @@ class Port implements JsonSerializable
 	public function toArray(): array
 	{
 		return [
-			'port' => $this->get(),
+			'address' => $this->get(),
 			'effective' => $this->getEffective()
 		];
 	}
