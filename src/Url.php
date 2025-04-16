@@ -4,6 +4,7 @@ namespace Iceylan\Urlify;
 
 use InvalidArgumentException;
 use Iceylan\Urlify\Path\Path;
+use Iceylan\Urlify\Query\Query;
 
 class Url
 {
@@ -64,6 +65,13 @@ class Url
 	public Path $path;
 
 	/**
+	 * The query of the URL.
+	 *
+	 * @var Query
+	 */
+	public Query $query;
+
+	/**
 	 * Auto-detects the scheme of the URL.
 	 * 
 	 * @var int
@@ -99,6 +107,10 @@ class Url
 			$this->part( 'path', '' )
 		);
 
+		$this->query = new Query(
+			$this->part( 'query' )
+		);
+
 		$this->validate();
 	}
 
@@ -111,7 +123,7 @@ class Url
 	 */
 	private function part( string $key, mixed $default = null ): ?string
 	{
-		return $this->parts[ $key ] ?? $default;
+		return ( $this->parts[ $key ] ?? $default ) ?: null;
 	}
 
 	/**
@@ -148,5 +160,4 @@ class Url
 			throw new InvalidArgumentException( "Invalid URL: {$this->original}" );
 		}
 	}
-
 }
