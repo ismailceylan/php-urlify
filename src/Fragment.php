@@ -40,12 +40,23 @@ class Fragment implements JsonSerializable
 	/**
 	 * Sets the fragment of the URL.
 	 * 
-	 * @param string $fragment the new fragment of the URL
-	 * @return self This object, for method chaining.
+	 * If the given fragment is a Query object, it is converted to a string
+	 * before being set.
+	 * 
+	 * @param string|Query $fragment the fragment of the URL, or a Query object
+	 * @return self the current instance of the Fragment class for method chaining
 	 */
-	public function set( string $fragment ): self
+	public function set( string|Query $fragment ): self
 	{
-		$this->fragment = $fragment;
+		if( $fragment instanceof Query )
+		{
+			$this->fragment = $fragment->__toString();
+		}
+		else
+		{
+			$this->fragment = $fragment;
+		}
+		
 		return $this;
 	}
 
