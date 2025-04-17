@@ -34,11 +34,16 @@ class Path implements JsonSerializable
 	/**
 	 * Converts the Path object to a string.
 	 *
-	 * @return string The string representation of the Path object.
+	 * This method returns a string representation of the path of the URL, with
+	 * empty segments removed and normalized.
+	 *
+	 * @return string The string representation of the path.
 	 */
 	public function __toString(): string
 	{
-		return implode( '/', $this->getNormalizedSegments());
+		return $this->isEmpty()
+			? ''
+			: '/' . implode( '/', $this->getNormalizedSegments());
 	}
 
 	/**
@@ -311,6 +316,15 @@ class Path implements JsonSerializable
 			->all();
 	}
 
+	/**
+	 * Converts the Path object to an array for JSON serialization.
+	 *
+	 * The resulting array contains:
+	 * - 'rawSegments': an array of the original segments in the path.
+	 * - 'resolvedSegments': an array of the normalized segments in the path.
+	 *
+	 * @return array The serialized representation of the Path object.
+	 */
 	public function jsonSerialize(): array
 	{
 		return
