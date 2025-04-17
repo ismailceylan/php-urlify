@@ -41,7 +41,9 @@ class Port implements JsonSerializable
 	 */
 	public function __toString()
 	{
-		return (string) $this->port;
+		return $this->port !== null
+			? ':' . (string) $this->port
+			: '';
 	}
 
 	/**
