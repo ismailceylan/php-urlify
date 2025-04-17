@@ -118,7 +118,7 @@ class Fragment implements JsonSerializable
 	 */
 	public function asQuery(): Query|null
 	{
-		return strpos( $this->fragment, '&' ) !== false
+		return strpos( $this->fragment, '=' ) !== false
 			? new Query( $this->fragment )
 			: null;
 	}
