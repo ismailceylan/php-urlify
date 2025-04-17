@@ -9,13 +9,6 @@ use Iceylan\Urlify\Query\Query;
 class Url
 {
 	/**
-	 * The original URL.
-	 * 
-	 * @var string
-	 */
-	private string $original;
-
-	/**
 	 * The options.
 	 *
 	 * @var integer
@@ -32,51 +25,51 @@ class Url
 	/**
 	 * The scheme of the URL.
 	 *
-	 * @var Scheme
+	 * @var ?Scheme
 	 */
-	public Scheme $scheme;
+	public ?Scheme $scheme = null;
 
 	/**
 	 * The host of the URL.
 	 *
-	 * @var Auth
+	 * @var ?Auth
 	 */
-	public Auth $auth;
+	public ?Auth $auth = null;
 
 	/**
 	 * The host of the URL.
 	 *
-	 * @var Host
+	 * @var ?Host
 	 */
-	public Host $host;
+	public ?Host $host = null;
 
 	/**
 	 * The port of the URL.
 	 *
-	 * @var Port
+	 * @var ?Port
 	 */
-	public Port $port;
+	public ?Port $port = null;
 
 	/**
 	 * The path of the URL.
 	 *
-	 * @var Path
+	 * @var ?Path
 	 */
-	public Path $path;
+	public ?Path $path = null;
 
 	/**
 	 * The query of the URL.
 	 *
-	 * @var Query
+	 * @var ?Query
 	 */
-	public Query $query;
+	public ?Query $query = null;
 
 	/**
 	 * The fragment of the URL.
 	 *
-	 * @var Fragment
+	 * @var ?Fragment
 	 */
-	public Fragment $fragment;
+	public ?Fragment $fragment = null;
 
 	/**
 	 * Auto-detects the scheme of the URL.
@@ -91,11 +84,27 @@ class Url
 	 * @param string $url the URL to be parsed
 	 * @throws InvalidArgumentException if the given URL is invalid
 	 */
-	public function __construct( string $url, int $options = 0 )
+	public function __construct( ?string $url = null, int $options = 0 )
 	{
 		$this->options = $options;
-		$this->original = $this->normalize( $url );
-		$this->parts = parse_url( $this->original );
+
+		if( $url !== null )
+		{
+			$this->parse( $url );	
+		}
+	}
+
+	/**
+	 * Parses the given URL into it's parts.
+	 * 
+	 * @param string $url the URL to be parsed
+	 * @throws InvalidArgumentException if the given URL is invalid
+	 */
+	public function parse( string $url )
+	{
+		static::validate( $url );
+
+		$this->parts = parse_url( $this->normalize( $url ));
 
 		$this->scheme = new Scheme( $this->part( 'scheme', '' ));
 		$this->host = new Host( $this->part( 'host' ));
@@ -121,8 +130,6 @@ class Url
 		$this->fragment = new Fragment(
 			$this->part( 'fragment' )
 		);
-
-		$this->validate();
 	}
 
 	/**
@@ -162,13 +169,14 @@ class Url
 	/**
 	 * Validates the original URL.
 	 *
+	 * @param string $url the URL to be validated.
 	 * @throws InvalidArgumentException if the URL is invalid.
 	 */
-	protected function validate(): void
+	static public function validate( string $url ): void
 	{
-		if( ! filter_var( $this->original, FILTER_VALIDATE_URL ) )
+		if( ! filter_var( $url, FILTER_VALIDATE_URL ) )
 		{
-			throw new InvalidArgumentException( "Invalid URL: {$this->original}" );
+			throw new InvalidArgumentException( "Invalid URL: {$url}" );
 		}
 	}
 
