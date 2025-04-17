@@ -11,25 +11,32 @@ use JsonSerializable;
 class Host implements JsonSerializable
 {
 	/**
-	 * The original host.
+	 * An array of subdomains.
+	 *
+	 * @var array
+	 */
+	private array $subdomains = [];
+
+	/**
+	 * The primary domain name of the host.
 	 *
 	 * @var ?string
 	 */
-	private ?string $original;
+	private ?string $primaryDomainName = null;
 
 	/**
 	 * The top-level domain of the host.
 	 * 
-	 * @var string
+	 * @var ?string
 	 */
-	private string $topLevelDomain;
+	private ?string $topLevelDomainName = null;
 
 	/**
 	 * An array of top-level domains.
 	 *
 	 * @var array
 	 */
-	private array $topLevelDomains = [];
+	private array $tlds = [];
 
 	/**
 	 * Constructs a new Host object.
@@ -38,24 +45,25 @@ class Host implements JsonSerializable
 	 */
 	public function __construct( ?string $host = null )
 	{
-		$this->original = $host;
+		if( $host )
+		{
+			$this->parse( $host );
+		}
 	}
 
 	/**
-	 * Converts the object to a string representation.
+	 * Parses the given host into its parts.
 	 *
-	 * The string representation of the object is in the format of
-	 * "subdomain.primaryDomain.topLevelDomain".
+	 * Retrieves the top-level domain, primary domain name and subdomains from the
+	 * original host and sets them to their respective properties.
 	 *
-	 * @return string The string representation of the object.
+	 * @param string $host The original host to be parsed.
 	 */
-	public function __toString()
+	private function parse( string $host )
 	{
-		return $this->original === null
-			? ''
-			: $this->getSubdomainName() . '.' .
-		      $this->getPrimaryDomainName() . '.' .
-			  $this->getTopLevelDomain();
+		$this->topLevelDomainName = $this->parseTopLevelDomain( $host );
+		$this->primaryDomainName = $this->parsePrimaryDomainName( $host );
+		$this->subdomains = $this->parseSubdomains( $host );
 	}
 
 	/**
@@ -66,22 +74,13 @@ class Host implements JsonSerializable
 	 * domain until a match is found. If no valid top-level domain is found, an exception
 	 * is thrown.
 	 *
+	 * @param string $host The original host.
 	 * @return ?string The top-level domain.
 	 * @throws Exception If no valid top-level domain can be determined.
 	 */
-	public function getTopLevelDomain(): ?string
+	public function parseTopLevelDomain( string $host ): ?string
 	{
-		if( isset( $this->topLevelDomain ))
-		{
-			return $this->topLevelDomain;
-		}
-
-		if( ! isset( $this->original ))
-		{
-			return null;
-		}
-
-		$parts = explode( '.', $this->original );
+		$parts = explode( '.', $host );
 		$len = count( $parts );
 
 		for( $i = 0; $i < $len; $i++ )
@@ -90,67 +89,11 @@ class Host implements JsonSerializable
 
 			if( $this->isTopLevelDomain( $dotted ))
 			{
-				return $this->topLevelDomain = $dotted;
+				return $dotted;
 			}
 		}
 
-		throw new Exception( "Unknown top-level domain: {$this->original}" );
-	}
-
-	/**
-	 * Retrieves the primary domain name from the original host.
-	 *
-	 * The primary domain name is the first subdomain in front of the
-	 * top-level domain.
-	 *
-	 * @return string The primary domain name.
-	 * @throws Exception If no valid top-level domain can be determined.
-	 */
-	public function getPrimaryDomainName(): string
-	{
-		$tldCleanedNS = trim( str_replace( $this->getTopLevelDomain(), '', $this->original ), '.' );
-		$parts = explode( '.', $tldCleanedNS );
-
-		return $parts[ count( $parts ) - 1 ];
-	}
-
-	/**
-	 * Retrieves the primary domain name from the original host.
-	 *
-	 * The primary domain is the full domain name of the primary domain
-	 * name in front of the top-level domain.
-	 *
-	 * @return string The primary domain name.
-	 * @throws Exception If no valid top-level domain can be determined.
-	 */
-	public function getPrimaryDomain(): string
-	{
-		return $this->getPrimaryDomainName() . '.' . $this->getTopLevelDomain();
-	}
-
-	/**
-	 * Retrieves the subdomain from the original host.
-	 *
-	 * The subdomain is the portion of the domain that precedes the primary domain
-	 * and top-level domain. If there is no subdomain, an empty string is returned.
-	 *
-	 * @return string The subdomain of the host.
-	 */
-	public function getSubdomainName(): string
-	{
-		return trim( str_replace( $this->getPrimaryDomain(), '', $this->original ), '.' );
-	}
-
-	/**
-	 * Retrieves the subdomains of the host as an array.
-	 *
-	 * If there is no subdomain, an empty array is returned.
-	 *
-	 * @return array The subdomains of the host.
-	 */
-	public function getSubdomains(): array
-	{
-		return explode( '.', $this->getSubdomainName());
+		throw new Exception( "Unknown top-level domain: {$host}" );
 	}
 
 	/**
@@ -163,12 +106,258 @@ class Host implements JsonSerializable
 	 */
 	public function isTopLevelDomain( string $domain ): bool
 	{
-		if( empty( $this->topLevelDomains ))
+		if( empty( $this->tlds ))
 		{
-			$this->topLevelDomains = require_once( 'resources/tlds.php' );
+			$this->tlds = require_once( 'resources/tlds.php' );
 		}
 
-		return in_array( $domain, $this->topLevelDomains );
+		return in_array( $domain, $this->tlds );
+	}
+
+	/**
+	 * Retrieves the primary domain name from the original host.
+	 *
+	 * The primary domain name is the first subdomain in front of the
+	 * top-level domain.
+	 *
+	 * @return ?string The primary domain name.
+	 * @throws Exception If no valid top-level domain can be determined.
+	 */
+	public function parsePrimaryDomainName( string $host ): ?string
+	{
+		$topLevelDomainNameClened = trim( str_replace( $this->topLevelDomainName, '', $host ), '.' );
+
+		if( $topLevelDomainNameClened === '' )
+		{
+			return null;
+		}
+
+		$parts = explode(
+			separator: '.',
+			string: $topLevelDomainNameClened
+		);
+
+		return $parts[ count( $parts ) - 1 ];
+	}
+
+	/**
+	 * Retrieves the subdomains of the host as an array.
+	 *
+	 * If there is no subdomain, an empty array is returned.
+	 *
+	 * @param string $host The original host.
+	 * @return array The subdomains of the host.
+	 */
+	public function parseSubdomains( string $host ): array
+	{
+		// If there is no primary domain name, that means there is no subdomain
+		if( $this->primaryDomainName === null )
+		{
+			return [];
+		}
+
+		// If there is no top-level domain name, that means there is no subdomain
+		if( $this->topLevelDomainName === null )
+		{
+			return [];
+		}
+
+		$fullDomainCleaned = trim(
+			string: str_replace(
+				search: $this->primaryDomainName . '.' . $this->topLevelDomainName,
+				replace: '',
+				subject: $host
+			),
+			characters: '.'
+		);
+
+		// If the full domain is empty, that means there is no subdomain
+		if( $fullDomainCleaned === '' )
+		{
+			return [];
+		}
+
+		$parts = explode(
+			separator: '.',
+			string: $fullDomainCleaned
+		);
+
+		return $parts;
+	}
+
+	/**
+	 * Sets the subdomain name for the host.
+	 *
+	 * If the given subdomain is null, the subdomains are reset to an empty array.
+	 * Otherwise, the given subdomain is split into parts and set as the subdomains.
+	 *
+	 * @param ?string $subdomain The subdomain name to set.
+	 * @return self The object itself.
+	 */
+	public function setSubdomain( ?string $subdomain ): self
+	{
+		if( $subdomain === null )
+		{
+			$this->subdomains = [];
+		}
+		else
+		{
+			$this->subdomains = explode( '.', $subdomain );
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Adds a subdomain to the end of the existing subdomains array.
+	 *
+	 * @param string $subdomain The subdomain to add.
+	 * @return self The object itself.
+	 */
+	public function pushSubdomain( string $subdomain ): self
+	{
+		$this->subdomains[] = $subdomain;
+		return $this;
+	}
+
+	/**
+	 * Prepends a subdomain to the beginning of the existing subdomains array.
+	 *
+	 * @param string $subdomain The subdomain to prepend.
+	 * @return self The object itself.
+	 */
+	public function prependSubdomain( string $subdomain ): self
+	{
+		array_unshift( $this->subdomains, $subdomain );
+		return $this;
+	}
+
+	/**
+	 * Sets the primary domain name for the host.
+	 *
+	 * If the given primary domain name is null, the primary domain name is reset to null.
+	 * Otherwise, the given primary domain name is set as the primary domain name.
+	 *
+	 * @param ?string $name The primary domain name to set.
+	 * @return self The object itself.
+	 */
+	public function setPrimaryDomainName( ?string $name ): self
+	{
+		$this->primaryDomainName = $name;
+		return $this;
+	}
+
+	/**
+	 * Sets the top-level domain name for the host.
+	 *
+	 * If the given top-level domain name is null, the top-level domain name is reset to null.
+	 * Otherwise, the given top-level domain name is set as the top-level domain name.
+	 *
+	 * @param ?string $name The top-level domain name to set.
+	 * @return self The object itself.
+	 */
+	public function setTopLevelDomainName( ?string $name ): self
+	{
+		$this->topLevelDomainName = $name;
+		return $this;
+	}
+
+	/**
+	 * Converts the object to a string representation.
+	 *
+	 * The string representation of the object is in the format of
+	 * "subdomain.primaryDomain.topLevelDomain".
+	 *
+	 * @return string The string representation of the object.
+	 */
+	public function __toString()
+	{
+		$data = [];
+
+		if( $sub = $this->getSubdomainName())
+		{
+			$data[] = $sub;
+		}
+
+		if( $primary = $this->getPrimaryDomainName())
+		{
+			$data[] = $primary;
+		}
+
+		if( $tld = $this->getTopLevelDomainName())
+		{
+			$data[] = $tld;
+		}
+
+		return implode( '.', $data );
+	}
+
+	/**
+	 * Retrieves the subdomain name from the host.
+	 *
+	 * The subdomain name is the string representation of the subdomains array,
+	 * joined by dots.
+	 *
+	 * @return string The subdomain name.
+	 */
+	public function getSubdomainName(): ?string
+	{
+		return implode( '.', $this->subdomains ) ?: null;
+	}
+
+	/**
+	 * Retrieves the subdomains as an array.
+	 *
+	 * @return array The subdomains of the host.
+	 */
+	public function getSubdomains(): array
+	{
+		return $this->subdomains;
+	}
+
+	/**
+	 * Retrieves the primary domain name from the host.
+	 *
+	 * @return ?string The primary domain name.
+	 */
+	public function getPrimaryDomainName(): ?string
+	{
+		return $this->primaryDomainName;
+	}
+
+	/**
+	 * Retrieves the top-level domain name from the host.
+	 *
+	 * @return ?string The top-level domain name, or null if not set.
+	 */
+	public function getTopLevelDomainName(): ?string
+	{
+		return $this->topLevelDomainName;
+	}
+
+	/**
+	 * Retrieves the root domain of the host.
+	 *
+	 * The root domain is the string representation of the primary domain name and
+	 * top-level domain name, joined by dots.
+	 *
+	 * @return string|null The root domain, or null if not set.
+	 */
+	public function getRootDomain(): ?string
+	{
+		$data = [];
+
+		if( $primary = $this->getPrimaryDomainName())
+		{
+			$data[] = $primary;
+		}
+
+		if( $tld = $this->getTopLevelDomainName())
+		{
+			$data[] = $tld;
+		}
+
+		return implode( '.', $data ) ?: null;
 	}
 
 	/**
@@ -179,7 +368,7 @@ class Host implements JsonSerializable
 	 * - original: The original host name.
 	 * - topLevelDomain: The top-level domain name.
 	 * - primaryDomainName: The primary domain name.
-	 * - primaryDomain: The primary domain name with the top-level domain.
+	 * - rootDomain: The primary domain name with the top-level domain.
 	 * - subdomainName: The subdomain name.
 	 * - subdomains: The subdomains as an array.
 	 *
@@ -188,12 +377,11 @@ class Host implements JsonSerializable
 	public function toArray(): array
 	{
 		return [
-			'original' => $this->original,
-			'topLevelDomain' => $this->getTopLevelDomain(),
-			'primaryDomainName' => $this->getPrimaryDomainName(),
-			'primaryDomain' => $this->getPrimaryDomain(),
-			'subdomainName' => $this->getSubdomainName(),
 			'subdomains' => $this->getSubdomains(),
+			'subdomainName' => $this->getSubdomainName(),
+			'primaryDomainName' => $this->getPrimaryDomainName(),
+			'topLevelDomain' => $this->getTopLevelDomainName(),
+			'rootDomain' => $this->getRootDomain(),
 		];
 	}
 
