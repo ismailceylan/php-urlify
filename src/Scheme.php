@@ -101,7 +101,7 @@ class Scheme implements JsonSerializable
 	 */
 	public function __construct( ?string $scheme = null )
 	{
-		$this->scheme = $scheme;
+		$this->set( $scheme );
 	}
 
 	/**
@@ -112,6 +112,18 @@ class Scheme implements JsonSerializable
 	public function get(): string
 	{
 		return $this->scheme;
+	}
+
+	/**
+	 * Sets the scheme for the current object.
+	 *
+	 * @param string $scheme The scheme to be set, e.g., "http" or "https".
+	 * @return self The current instance of the Scheme class.
+	 */
+	public function set( ?string $scheme ): self
+	{
+		$this->scheme = $scheme;
+		return $this;
 	}
 
 	/**
