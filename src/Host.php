@@ -186,6 +186,31 @@ class Host implements JsonSerializable
 	}
 
 	/**
+	 * Sets the host from a string.
+	 *
+	 * If the given host is null, the object is reset to its default state.
+	 * Otherwise, the host is parsed into its parts and set to the object.
+	 *
+	 * @param string $host The host to set.
+	 * @return self The object itself.
+	 */
+	public function set( ?string $host = null ): self
+	{
+		if( $host === null )
+		{
+			$this->topLevelDomainName = null;
+			$this->primaryDomainName = null;
+			$this->subdomains = [];
+		}
+		else
+		{
+			$this->parse( $host );
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Sets the subdomain name for the host.
 	 *
 	 * If the given subdomain is null, the subdomains are reset to an empty array.
