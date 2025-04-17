@@ -56,6 +56,44 @@ class Auth implements JsonSerializable
 	}
 
 	/**
+	 * Sets the username of the user.
+	 * 
+	 * @param string $user The username of the user.
+	 * @return $this The object itself, for method chaining.
+	 */
+	public function setUser( string $user ): self
+	{
+		$this->user = $user;
+		return $this;
+	}
+
+	/**
+	 * Sets the password of the user.
+	 *
+	 * @param string $pass The password of the user.
+	 * @return $this The object itself, for method chaining.
+	 */
+	public function setPass( string $pass ): self
+	{
+		$this->pass = $pass;
+		return $this;
+	}
+
+	/**
+	 * Sets both the username and password for the Auth object.
+	 *
+	 * @param string|null $user The username to set, or null to unset.
+	 * @param string|null $pass The password to set, or null to unset.
+	 * @return $this The object itself, for method chaining.
+	 */
+	public function set( ?string $user = null, ?string $pass = null ): self
+	{
+		$this->user = $user;
+		$this->pass = $pass;
+		return $this;
+	}
+
+	/**
 	 * Checks if the Auth object has either a username or a password set.
 	 * 
 	 * @return bool True if either the username or the password is set, false otherwise.
