@@ -24,9 +24,9 @@ class Path implements JsonSerializable
 	/**
 	 * Constructs a new Path object.
 	 *
-	 * @param string $path the path of the URL
+	 * @param ?string $path the path of the URL
 	 */
-	public function __construct( string $path )
+	public function __construct( ?string $path = null )
 	{
 		$this->segments = $this->parseSegments( $path );
 	}
@@ -52,9 +52,15 @@ class Path implements JsonSerializable
 	 * @param string $path The path to parse.
 	 * @return SegmentCollection The parsed segments.
 	 */
-	private function parseSegments( string $path ): SegmentCollection
+	private function parseSegments( ?string $path = null ): SegmentCollection
 	{
 		$collection = new SegmentCollection;
+
+		if( $path === null )
+		{
+			return $collection;
+		}
+
 		$drivers = [ CurrentSegment::class, EmptySegment::class, NormalSegment::class, ParentSegment::class ];
 		$parts = explode( '/', trim( $path, '/' ));
 

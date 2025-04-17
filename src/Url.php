@@ -25,51 +25,51 @@ class Url
 	/**
 	 * The scheme of the URL.
 	 *
-	 * @var ?Scheme
+	 * @var Scheme
 	 */
-	public ?Scheme $scheme = null;
+	public Scheme $scheme;
 
 	/**
 	 * The host of the URL.
 	 *
-	 * @var ?Auth
+	 * @var Auth
 	 */
-	public ?Auth $auth = null;
+	public Auth $auth;
 
 	/**
 	 * The host of the URL.
 	 *
-	 * @var ?Host
+	 * @var Host
 	 */
-	public ?Host $host = null;
+	public Host $host;
 
 	/**
 	 * The port of the URL.
 	 *
-	 * @var ?Port
+	 * @var Port
 	 */
-	public ?Port $port = null;
+	public Port $port;
 
 	/**
 	 * The path of the URL.
 	 *
-	 * @var ?Path
+	 * @var Path
 	 */
-	public ?Path $path = null;
+	public Path $path;
 
 	/**
 	 * The query of the URL.
 	 *
-	 * @var ?Query
+	 * @var Query
 	 */
-	public ?Query $query = null;
+	public Query $query;
 
 	/**
 	 * The fragment of the URL.
 	 *
-	 * @var ?Fragment
+	 * @var Fragment
 	 */
-	public ?Fragment $fragment = null;
+	public Fragment $fragment;
 
 	/**
 	 * Auto-detects the scheme of the URL.
@@ -91,6 +91,16 @@ class Url
 		if( $url !== null )
 		{
 			$this->parse( $url );	
+		}
+		else
+		{
+			$this->scheme = new Scheme;
+			$this->auth = new Auth;
+			$this->host = new Host;
+			$this->port = new Port( null, $this->scheme );
+			$this->path = new Path;
+			$this->query = new Query;
+			$this->fragment = new Fragment;
 		}
 	}
 

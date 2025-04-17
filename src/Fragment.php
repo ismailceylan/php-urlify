@@ -22,7 +22,7 @@ class Fragment implements JsonSerializable
 	 * 
 	 * @param string|null $fragment the fragment of the URL
 	 */
-	public function __construct( ?string $fragment )
+	public function __construct( ?string $fragment = null )
 	{
 		$this->fragment = $fragment;
 	}

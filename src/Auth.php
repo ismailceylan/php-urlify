@@ -29,7 +29,7 @@ class Auth implements JsonSerializable
 	 * @param string|null $user the username of the user
 	 * @param string|null $pass the password of the user
 	 */
-	public function __construct( ?string $user, ?string $pass )
+	public function __construct( ?string $user = null, ?string $pass = null )
 	{
 		$this->user = $user == '' ? null : $user;
 		$this->pass = $pass == '' ? null : $pass;

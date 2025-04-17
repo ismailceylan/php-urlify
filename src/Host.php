@@ -13,9 +13,9 @@ class Host implements JsonSerializable
 	/**
 	 * The original host.
 	 *
-	 * @var string
+	 * @var ?string
 	 */
-	private string $original;
+	private ?string $original;
 
 	/**
 	 * The top-level domain of the host.
@@ -34,9 +34,9 @@ class Host implements JsonSerializable
 	/**
 	 * Constructs a new Host object.
 	 *
-	 * @param string $host The original host to be set.
+	 * @param ?string $host The original host to be set.
 	 */
-	public function __construct( string $host )
+	public function __construct( ?string $host = null )
 	{
 		$this->original = $host;
 	}
@@ -51,9 +51,11 @@ class Host implements JsonSerializable
 	 */
 	public function __toString()
 	{
-		return $this->getSubdomainName() . '.' .
-		       $this->getPrimaryDomainName() . '.' .
-			   $this->getTopLevelDomain();
+		return $this->original === null
+			? ''
+			: $this->getSubdomainName() . '.' .
+		      $this->getPrimaryDomainName() . '.' .
+			  $this->getTopLevelDomain();
 	}
 
 	/**
@@ -64,14 +66,19 @@ class Host implements JsonSerializable
 	 * domain until a match is found. If no valid top-level domain is found, an exception
 	 * is thrown.
 	 *
-	 * @return string The top-level domain.
+	 * @return ?string The top-level domain.
 	 * @throws Exception If no valid top-level domain can be determined.
 	 */
-	public function getTopLevelDomain(): string
+	public function getTopLevelDomain(): ?string
 	{
 		if( isset( $this->topLevelDomain ))
 		{
 			return $this->topLevelDomain;
+		}
+
+		if( ! isset( $this->original ))
+		{
+			return null;
 		}
 
 		$parts = explode( '.', $this->original );

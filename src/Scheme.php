@@ -12,9 +12,9 @@ class Scheme implements JsonSerializable
 	/**
 	 * The scheme of the URL.
 	 *
-	 * @var string
+	 * @var ?string
 	 */
-	private string $scheme;
+	private ?string $scheme;
 
 	/**
 	 * An array of known schemes.
@@ -97,9 +97,9 @@ class Scheme implements JsonSerializable
 	/**
 	 * Constructs a new Scheme object.
 	 *
-	 * @param string $scheme The scheme to be set, e.g., "http" or "https".
+	 * @param ?string $scheme The scheme to be set, e.g., "http" or "https".
 	 */
-	public function __construct( string $scheme )
+	public function __construct( ?string $scheme = null )
 	{
 		$this->scheme = $scheme;
 	}
@@ -141,7 +141,9 @@ class Scheme implements JsonSerializable
 	 */
 	public function __toString(): string
 	{
-		return $this->scheme . ( in_array( $this->scheme, self::COLON_SCHEMES )? ':' : '://' );
+		return $this->scheme === null
+			? ''
+			: $this->scheme . ( in_array( $this->scheme, self::COLON_SCHEMES )? ':' : '://' );
 	}
 
 	/**
