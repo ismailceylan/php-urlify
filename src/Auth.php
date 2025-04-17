@@ -66,15 +66,37 @@ class Auth implements JsonSerializable
 	}
 
 	/**
-	 * Returns the authentication parts of the URL as a string.
-	 * 
-	 * The returned string is in the format of "username:password".
-	 * 
-	 * @return string The authentication parts of the URL as a string.
+	 * Converts the Auth object to a string.
+	 *
+	 * If the Auth object has both a username and a password set, the method
+	 * returns a string of the form "username:password@". If the Auth object has
+	 * only a username set, the method returns a string of the form "username@".
+	 * If the Auth object has only a password set, the method returns a string of
+	 * the form ":password@". If the Auth object has neither a username nor a
+	 * password set, the method returns an empty string.
+	 *
+	 * @return string The string representation of the Auth object.
 	 */
 	public function __toString()
 	{
-		return $this->user . ':' . $this->pass;
+		$t = '';
+
+		if( $this->user !== null )
+		{
+			$t .= $this->user;
+		}
+
+		if( $this->pass !== null )
+		{
+			$t .= ':' . $this->pass;
+		}
+
+		if( $t !== '' )
+		{
+			$t = "$t@";
+		}
+
+		return $t;
 	}
 
 	/**
