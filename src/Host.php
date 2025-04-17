@@ -42,6 +42,21 @@ class Host implements JsonSerializable
 	}
 
 	/**
+	 * Converts the object to a string representation.
+	 *
+	 * The string representation of the object is in the format of
+	 * "subdomain.primaryDomain.topLevelDomain".
+	 *
+	 * @return string The string representation of the object.
+	 */
+	public function __toString()
+	{
+		return $this->getSubdomainName() . '.' .
+		       $this->getPrimaryDomainName() . '.' .
+			   $this->getTopLevelDomain();
+	}
+
+	/**
 	 * Retrieves the top-level domain from the original host.
 	 *
 	 * If the top-level domain has been previously determined, it returns the cached value.
