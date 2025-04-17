@@ -47,7 +47,9 @@ class Query implements JsonSerializable
 			$stack[] = $entry;
 		}
 
-		return implode( "&", $stack );
+		return empty( $stack )
+			? ''
+			: '?' . implode( "&", $stack );
 	}
 
 	/**
