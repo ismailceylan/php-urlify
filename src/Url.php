@@ -171,4 +171,15 @@ class Url
 			throw new InvalidArgumentException( "Invalid URL: {$this->original}" );
 		}
 	}
+
+	/**
+	 * Converts the Url object to a string.
+	 *
+	 * @return string the string representation of the Url object
+	 */
+	public function __toString()
+	{
+		return $this->scheme . $this->auth . $this->host . $this->port .
+			   $this->path . $this->query . $this->fragment;
+	}
 }
