@@ -204,6 +204,30 @@ class Query implements JsonSerializable
 	}
 
 	/**
+	 * Sets the raw query string.
+	 *
+	 * If the given query string is null, all query entries are removed.
+	 * Otherwise, the given query string is parsed and all its query entries
+	 * are added to the query.
+	 *
+	 * @param string|null $query the raw query string to set, or null to unset
+	 * @return self the current instance of the Query class
+	 */
+	public function setRaw( ?string $query ): self
+	{
+		if( $query === null )
+		{
+			$this->clear();
+		}
+		else
+		{
+			$this->parse( $query );
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Removes all query entries with the specified key from the query.
 	 *
 	 * @param string $key the key of the query entries to remove

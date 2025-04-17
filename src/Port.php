@@ -57,6 +57,21 @@ class Port implements JsonSerializable
 	}
 
 	/**
+	 * Sets the port number.
+	 *
+	 * If the provided port number is null, the port is reset to null.
+	 * Otherwise, the given port number is set.
+	 *
+	 * @param int|null $port The port number to set, or null to unset.
+	 * @return self The current instance for method chaining.
+	 */
+	public function set( ?int $port ): self
+	{
+		$this->port = $port;
+		return $this;
+	}
+
+	/**
 	 * Determines if the port is defined.
 	 *
 	 * @return bool True if the port is defined, false otherwise.
