@@ -114,11 +114,13 @@ class Fragment implements JsonSerializable
 	/**
 	 * Retrieves the fragment of the URL as a Query object.
 	 *
-	 * @return Query The fragment of the URL as a Query object.
+	 * @return Query|null The fragment of the URL as a Query object.
 	 */
-	public function asQuery(): Query
+	public function asQuery(): Query|null
 	{
-		return new Query( $this->fragment );
+		return strpos( $this->fragment, '&' ) !== false
+			? new Query( $this->fragment )
+			: null;
 	}
 
 	/**
