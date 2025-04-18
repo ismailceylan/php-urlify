@@ -28,7 +28,7 @@ class Path implements JsonSerializable
 	 */
 	public function __construct( ?string $path = null )
 	{
-		$this->segments = $this->parseSegments( $path );
+		$this->set( $path );
 	}
 
 	/**
@@ -44,6 +44,21 @@ class Path implements JsonSerializable
 		return $this->isEmpty()
 			? ''
 			: '/' . implode( '/', $this->getNormalizedSegments());
+	}
+
+	/**
+	 * Sets the path of the URL.
+	 *
+	 * This method parses the given path into segments and updates the
+	 * current path segments with the parsed segments.
+	 *
+	 * @param ?string $path The path to set.
+	 * @return self The current instance for method chaining.
+	 */
+	public function set( ?string $path ): self
+	{
+		$this->segments = $this->parseSegments( $path );
+		return $this;
 	}
 
 	/**
