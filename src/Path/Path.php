@@ -214,6 +214,20 @@ class Path implements JsonSerializable
 	}
 
 	/**
+	 * Checks if the current path is a prefix of the given path.
+	 *
+	 * The method checks if the current path is a prefix of the given path.
+	 * This is useful for determining if a URL is a prefix of another URL.
+	 *
+	 * @param Path $path The path to check against.
+	 * @return bool True if the current path is a prefix of the given path, false otherwise.
+	 */
+	public function isPrefixOf( Path $path ): bool
+	{
+		return str_starts_with( $this->get(), $path->get());
+	}
+
+	/**
 	 * Returns the segment at the specified index.
 	 *
 	 * @param int $index the index of the segment
