@@ -100,6 +100,18 @@ class Port implements JsonSerializable
     }
 
 	/**
+	 * Determines if the port is the default port for its scheme.
+	 *
+	 * @return bool True if the port is explicitly set and matches the default 
+	 * port for the scheme, false otherwise.
+	 */
+	public function isDefault(): bool
+	{
+		return $this->port !== null &&
+			$this->port === self::defaultPortForScheme( $this->scheme );
+	}
+
+	/**
 	 * Returns the default port number for the given scheme.
 	 *
 	 * @param string $scheme The scheme to retrieve the default port number for.
