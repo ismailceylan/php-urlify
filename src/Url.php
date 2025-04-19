@@ -112,16 +112,16 @@ class Url
 	{
 		static::isValid( $url );
 
-		$this->parts = parse_url( $this->normalize( $url )) ?: [];
+		$parts = parse_url( $this->normalize( $url )) ?: [];
 
-		$this->setScheme( $this->part( 'scheme' ));
-		$this->setHost( $this->part( 'host' ));
-		$this->setUsername( $this->part( 'user' ));
-		$this->setPassword( $this->part( 'pass' ));
-		$this->setPort( $this->part( 'port' ));
-		$this->setPath( $this->part( 'path' ));
-		$this->setQuery( $this->part( 'query' ));
-		$this->setFragment( $this->part( 'fragment' ));
+		$this->setScheme( $parts[ 'scheme' ] ?? null );
+		$this->setHost( $parts[ 'host' ] ?? null );
+		$this->setUsername( $parts[ 'user' ] ?? null );
+		$this->setPassword( $parts[ 'pass' ] ?? null );
+		$this->setPort( $parts[ 'port' ] ?? null );
+		$this->setPath( $parts[ 'path' ] ?? null );
+		$this->setQuery( $parts[ 'query' ] ?? null );
+		$this->setFragment( $parts[ 'fragment' ] ?? null );
 	}
 
 	/**
@@ -158,17 +158,6 @@ class Url
 		}
 
 		return $url;
-	}
-
-	/**
-	 * Returns the value of the given key from the parsed URL.
-	 * 
-	 * @param string $key the key to be retrieved
-	 * @return mixed the value of the given key if it exists, null otherwise
-	 */
-	private function part( string $key ): mixed
-	{
-		return $this->parts[ $key ] ?? null;
 	}
 
 	/**
