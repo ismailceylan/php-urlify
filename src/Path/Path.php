@@ -3,6 +3,7 @@
 namespace Iceylan\Urlify\Path;
 
 use JsonSerializable;
+use Iceylan\Urlify\Query\Query;
 use Iceylan\Urlify\Path\Segment\CurrentSegment;
 use Iceylan\Urlify\Path\Segment\EmptySegment;
 use Iceylan\Urlify\Path\Segment\NormalSegment;
@@ -193,6 +194,27 @@ class Path implements JsonSerializable
 			->getNotEmptySegments()
 			->get( $index )
 			?->getValue();
+	}
+
+	/**
+	 * Converts the segment at the specified index into a Query object.
+	 *
+	 * The segment is retrieved from the path and returned as a Query object. 
+	 * Optionally, a separator and equals sign can be specified for formatting 
+	 * purposes, though they are not currently utilized in the function.
+	 *
+	 * @param int $index The index of the segment to convert.
+	 * @param string|null $seperator The separator to use (optional).
+	 * @param string|null $equals The equals sign to use (optional).
+	 * @return Query A Query object representing the segment.
+	 */
+	public function getSegmentAsQuery(
+		int $index,
+		?string $seperator = null,
+		?string $equals = null
+	): Query
+	{
+		return new Query( $this->getSegment( $index, ), $seperator, $equals );
 	}
 
 	/**
