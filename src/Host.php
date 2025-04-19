@@ -125,16 +125,16 @@ class Host implements JsonSerializable
 	 */
 	public function parsePrimaryDomainName( string $host ): ?string
 	{
-		$topLevelDomainNameClened = trim( str_replace( $this->topLevelDomainName, '', $host ), '.' );
+		$hostWithoutTld = trim( str_replace( $this->topLevelDomainName, '', $host ), '.' );
 
-		if( $topLevelDomainNameClened === '' )
+		if( $hostWithoutTld === '' )
 		{
 			return null;
 		}
 
 		$parts = explode(
 			separator: '.',
-			string: $topLevelDomainNameClened
+			string: $hostWithoutTld
 		);
 
 		return $parts[ count( $parts ) - 1 ];
