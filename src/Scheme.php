@@ -162,11 +162,12 @@ class Scheme implements JsonSerializable
 	}
 
 	/**
-	 * @inheritDoc
-	 * 
-	 * Returns the scheme as a string.
-	 * 
-	 * @return array The scheme, e.g., "http" or "https".
+	 * Returns an array that can be serialized to JSON.
+	 *
+	 * This method is used when the object is passed to json_encode() to
+	 * generate a JSON representation of the Scheme object.
+	 *
+	 * @return array The JSON serializable representation of the Scheme object.
 	 */
 	public function jsonSerialize(): array
 	{
