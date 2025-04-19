@@ -78,7 +78,7 @@ class Path implements JsonSerializable
 		}
 
 		$drivers = [ CurrentSegment::class, EmptySegment::class, NormalSegment::class, ParentSegment::class ];
-		$parts = explode( '/', trim( $path, '/' ));
+		$parts = explode( '/', $path );
 
 		foreach( $parts as $part )
 		{
@@ -225,6 +225,20 @@ class Path implements JsonSerializable
 	public function isPrefixOf( Path $path ): bool
 	{
 		return str_starts_with( $this->get(), $path->get());
+	}
+
+	/**
+	 * Checks if the current path is absolute.
+	 *
+	 * The method checks if the current path is absolute by checking if the first
+	 * segment is an empty segment. An absolute path is one that starts with a
+	 * leading slash, which is represented by an empty segment.
+	 *
+	 * @return bool True if the current path is absolute, false otherwise.
+	 */
+	public function isAbsolute(): bool
+	{
+		return $this->segments->get( 0 ) instanceof EmptySegment;
 	}
 
 	/**
