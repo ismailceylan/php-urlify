@@ -266,6 +266,23 @@ class Query implements JsonSerializable
 	}
 
 	/**
+	 * Retrieves all unique values of query entries in the query.
+	 *
+	 * @return array an array of all values of query entries in the query
+	 */
+	public function values(): array
+	{
+		$values = [];
+
+		foreach( $this->entries as $entry )
+		{
+			$values[ $entry->value ] = true;
+		}
+
+		return array_keys( $values );
+	}
+
+	/**
 	 * Retrieves all keys of query entries in the query, including duplicates.
 	 *
 	 * @return array an array of all keys of query entries in the query
