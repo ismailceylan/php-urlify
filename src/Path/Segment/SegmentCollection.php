@@ -78,15 +78,18 @@ class SegmentCollection
 	}
 
 	/**
-	 * Retrieves a segment from the collection by index.
+	 * Retrieves the segment at the specified index in the collection.
+	 *
+	 * If the index is negative, it is treated as an offset from the end of the
+	 * collection. If the index is out of range, null is returned.
 	 *
 	 * @param int $index The index of the segment to retrieve.
-	 * @return SegmentInterface|null The segment at the given index, or null if
-	 *     the index is out of range.
+	 * @return SegmentInterface|null The segment at the specified index, or
+	 *     null if the index is out of range.
 	 */
 	public function get( int $index ): SegmentInterface|null
 	{
-		return $this->segments[ $index ] ?? null;
+		return $this->segments[ $this->normalizeNegativeIndex( $index )] ?? null;
 	}
 
 	/**
@@ -155,11 +158,13 @@ class SegmentCollection
 	}
 
 	/**
-	 * Inserts a segment at the specified index in the collection.
+	 * Inserts the given segment at the specified index in the collection.
+	 *
+	 * If the index is negative, it is treated as an offset from the end of the
+	 * collection. If the index is out of range, nothing happens.
 	 *
 	 * This method inserts the given segment at the specified index in the
-	 * collection. If the index is greater than the length of the collection,
-	 * the segment is appended to the end of the collection.
+	 * collection, and returns the current instance for method chaining.
 	 *
 	 * @param int $index The index at which to insert the segment.
 	 * @param string $segment The segment to insert.
@@ -167,39 +172,66 @@ class SegmentCollection
 	 */
 	public function insertAt( int $index, string $segment ): self
 	{
-		array_splice( $this->segments, $index, 0, [ $this->stringToSegment( $segment )]);
+		array_splice(
+			$this->segments,
+			$this->normalizeNegativeIndex( $index ),
+			0,
+			[ $this->stringToSegment( $segment )]
+		);
+
 		return $this;
 	}
 
 	/**
-	 * Replaces the segment at the specified index in the collection.
+	 * Replaces the segment at the specified index in the collection with the
+	 * given segment.
 	 *
-	 * This method replaces the segment at the specified index in the collection.
-	 * If the index is out of range, nothing happens.
+	 * If the index is negative, it is treated as an offset from the end of the
+	 * collection. If the index is out of range, nothing happens.
 	 *
 	 * @param int $index The index of the segment to replace.
-	 * @param string $segment The segment to replace with.
+	 * @param string $segment The segment to replace the existing segment with.
 	 * @return self The current instance for method chaining.
 	 */
 	public function replaceAt( int $index, string $segment ): self
 	{
-		$this->segments[ $index ] = $this->stringToSegment( $segment );
+
+		$this->segments[ $this->normalizeNegativeIndex( $index )] =
+			$this->stringToSegment( $segment );
+		
 		return $this;
 	}
 
 	/**
-	 * Removes the segment at the specified index from the collection.
+	 * Removes the segment at the specified index in the collection.
 	 *
-	 * This method removes the segment at the specified index from the collection.
-	 * If the index is out of range, nothing happens.
+	 * If the index is negative, it is treated as an offset from the end of the
+	 * collection. If the index is out of range, nothing happens.
 	 *
 	 * @param int $index The index of the segment to remove.
 	 * @return self The current instance for method chaining.
 	 */
 	public function removeAt( int $index ): self
 	{
-		array_splice( $this->segments, $index, 1 );
+		array_splice( $this->segments, $this->normalizeNegativeIndex( $index ), 1 );
 		return $this;
+	}
+
+	/**
+	 * Normalizes a negative index to a positive index relative to the collection.
+	 *
+	 * If the provided index is negative, it is converted to a positive index by adding
+	 * the total number of segments in the collection. This allows for accessing elements
+	 * from the end of the collection using negative indices.
+	 *
+	 * @param int $index The index to normalize, which may be negative.
+	 * @return int The normalized positive index.
+	 */
+	private function normalizeNegativeIndex( int $index ): int
+	{
+		return $index < 0
+			? $index += count( $this->segments )
+			: $index;
 	}
 
 	/**
