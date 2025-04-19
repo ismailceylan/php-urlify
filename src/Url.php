@@ -163,10 +163,10 @@ class Url
 	/**
 	 * Sets the scheme of the URL.
 	 *
-	 * @param string $scheme the scheme to be set
+	 * @param ?string $scheme the scheme to be set
 	 * @return self the current instance of the Url class
 	 */
-	public function setScheme( string $scheme ): self
+	public function setScheme( ?string $scheme ): self
 	{
 		$this->scheme->set( $scheme );
 		return $this;
