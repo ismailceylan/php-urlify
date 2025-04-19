@@ -21,18 +21,20 @@ class Query implements JsonSerializable
 	 * Constructs a new Query object.
 	 *
 	 * @param ?string $query the original query string
+	 * @param ?string $seperator the separator of the query string's segments
+	 * @param ?string $equals the equals sign of the query string's segments
 	 */
 	public function __construct(
 		?string $query = null,
-		string $seperator = '&',
-		string $equals = '='
+		?string $seperator = '&',
+		?string $equals = '='
 	)
 	{
 		$this->entries = new SplDoublyLinkedList();
 
 		if( $query )
 		{
-			$this->parse( $query, $seperator, $equals );
+			$this->parse( $query, $seperator ?? '&', $equals ?? '=' );
 		}
 	}
 
