@@ -22,13 +22,17 @@ class Query implements JsonSerializable
 	 *
 	 * @param ?string $query the original query string
 	 */
-	public function __construct( ?string $query = null )
+	public function __construct(
+		?string $query = null,
+		string $seperator = '&',
+		string $equals = '='
+	)
 	{
 		$this->entries = new SplDoublyLinkedList();
 
 		if( $query )
 		{
-			$this->parse( $query );
+			$this->parse( $query, $seperator, $equals );
 		}
 	}
 
@@ -56,10 +60,10 @@ class Query implements JsonSerializable
 	 * Parses a query string into query entries.
 	 *
 	 * @param string $query  the query string to be parsed
-	 * @param string $separator  the separator of the query string's segments (default: &)
-	 * @param string $equals  the separator of the query string's key-value pairs (default: =)
+	 * @param string $separator  the separator of the query string's segments
+	 * @param string $equals  the separator of the query string's key-value pairs
 	 */
-	private function parse( string $query, string $separator = '&', string $equals = '=' )
+	private function parse( string $query, string $separator, string $equals )
 	{
 		$segments = explode( $separator, $query );
 
@@ -204,16 +208,17 @@ class Query implements JsonSerializable
 	}
 
 	/**
-	 * Sets the raw query string.
+	 * Sets the query string of the query.
 	 *
-	 * If the given query string is null, all query entries are removed.
-	 * Otherwise, the given query string is parsed and all its query entries
-	 * are added to the query.
+	 * If the given query string is null, the query string is reset to an empty string.
+	 * Otherwise, the given query string is parsed and set as the query string.
 	 *
-	 * @param string|null $query the raw query string to set, or null to unset
-	 * @return self the current instance of the Query class
+	 * @param ?string $query the query string to set, or null to unset
+	 * @param string $seperator the separator of the query string's segments
+	 * @param string $equals the separator of the query string's key-value pairs
+	 * @return self
 	 */
-	public function setRaw( ?string $query ): self
+	public function setRaw( ?string $query, string $seperator = '&', string $equals = '=' ): self
 	{
 		if( $query === null )
 		{
@@ -221,7 +226,7 @@ class Query implements JsonSerializable
 		}
 		else
 		{
-			$this->parse( $query );
+			$this->parse( $query, $seperator, $equals );
 		}
 
 		return $this;
