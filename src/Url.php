@@ -125,15 +125,17 @@ class Url
 	}
 
 	/**
-	 * Returns the value of the given key from the parsed URL.
-	 * 
-	 * @param string $key the key to be retrieved
-	 * @param mixed $default the default value if the key does not exist
-	 * @return mixed the value of the given key if it exists, null otherwise
+	 * Validates the original URL.
+	 *
+	 * @param string $url the URL to be validated.
+	 * @throws InvalidArgumentException if the URL is invalid.
 	 */
-	private function part( string $key, mixed $default = null ): mixed
+	static public function isValid( string $url ): void
 	{
-		return ( $this->parts[ $key ] ?? $default ) ?: null;
+		if( ! filter_var( $url, FILTER_VALIDATE_URL ) )
+		{
+			throw new InvalidArgumentException( "Invalid URL: {$url}" );
+		}
 	}
 
 	/**
@@ -159,17 +161,15 @@ class Url
 	}
 
 	/**
-	 * Validates the original URL.
-	 *
-	 * @param string $url the URL to be validated.
-	 * @throws InvalidArgumentException if the URL is invalid.
+	 * Returns the value of the given key from the parsed URL.
+	 * 
+	 * @param string $key the key to be retrieved
+	 * @param mixed $default the default value if the key does not exist
+	 * @return mixed the value of the given key if it exists, null otherwise
 	 */
-	static public function isValid( string $url ): void
+	private function part( string $key, mixed $default = null ): mixed
 	{
-		if( ! filter_var( $url, FILTER_VALIDATE_URL ) )
-		{
-			throw new InvalidArgumentException( "Invalid URL: {$url}" );
-		}
+		return ( $this->parts[ $key ] ?? $default ) ?: null;
 	}
 
 	/**
