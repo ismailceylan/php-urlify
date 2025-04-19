@@ -117,12 +117,15 @@ class Scheme implements JsonSerializable
 	/**
 	 * Sets the scheme for the current object.
 	 *
-	 * @param string $scheme The scheme to be set, e.g., "http" or "https".
+	 * @param ?string $scheme The scheme to be set, e.g., "http" or "https".
 	 * @return self The current instance of the Scheme class.
 	 */
 	public function set( ?string $scheme ): self
 	{
-		$this->scheme = $scheme;
+		$this->scheme = $scheme !== null
+			? strtolower( $scheme )
+			: null;
+		
 		return $this;
 	}
 
