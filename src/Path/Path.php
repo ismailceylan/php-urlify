@@ -196,6 +196,24 @@ class Path implements JsonSerializable
 	}
 
 	/**
+	 * Returns a portion of the path as a string based on the specified start index
+	 * and optional length.
+	 *
+	 * This method slices the array of segments and joins them into a path string.
+	 * If the length is not specified, it extracts all segments from the start index
+	 * to the end. The method uses zero-based indexing for the start parameter.
+	 *
+	 * @param int $start The starting index of the slice.
+	 * @param int|null $length The number of segments to include in the slice. If null,
+	 *                         includes all segments from the start index onwards.
+	 * @return string A string representing the sliced portion of the path.
+	 */
+	public function slice( int $start, ?int $length = null ): string
+	{
+		return implode( '/', array_slice( $this->getSegments(), $start, $length ));
+	}
+
+	/**
 	 * Returns the segment at the specified index.
 	 *
 	 * @param int $index the index of the segment
