@@ -278,8 +278,15 @@ class Url
 	 */
 	public function __toString()
 	{
-		return $this->scheme . $this->auth . $this->host . $this->port .
-			   $this->path . $this->query . $this->fragment;
+		$data = $this->scheme . $this->auth . $this->host . $this->port;
+		$path = (string) $this->path;
+
+		// Add a leading slash if the path is empty
+		$data .= $path === ''
+			? '/'
+			: $path;
+
+		return $data . $this->query . $this->fragment;
 	}
 
 	/**
