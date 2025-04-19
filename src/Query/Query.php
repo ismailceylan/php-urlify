@@ -88,13 +88,14 @@ class Query implements JsonSerializable
 	}
 
 	/**
-	 * Retrieves the latest query entry with the specified key in the query.
+	 * Returns the value of the given key from the query entries.
 	 *
-	 * @param string   $key The key to search for in the query entries.
-	 * @param mixed    $default The default value to return if no entry with the
-	 *                 key exists in the query.
-	 * @return ?string The value of the query entry, or null if no entry with the key
-	 *                 exists in the query.
+	 * If the key does not exist, the second argument is returned. If the second
+	 * argument is not provided, null is returned.
+	 *
+	 * @param string $key the key to be retrieved
+	 * @param mixed $default the default value if the key does not exist
+	 * @return string|null the value of the given key if it exists, null otherwise
 	 */
 	public function get( string $key, mixed $default = null ): ?string
 	{
@@ -109,6 +110,28 @@ class Query implements JsonSerializable
 		}
 
 		return $latest ?? $default;
+	}
+
+	/**
+	 * Returns the value of the given key from the query entries as a new Query object.
+	 *
+	 * If the key does not exist, the forth ($default) argument is returned. If the default
+	 * argument is not provided, null is returned.
+	 *
+	 * @param string $key the key to be retrieved
+	 * @param string $seperator the separator of the query string's segments, defaults to '&'
+	 * @param string $equals the separator of the query string's key-value pairs, defaults to '='
+	 * @param mixed $default the default value if the key does not exist
+	 * @return Query the value of the given key if it exists, null otherwise
+	 */
+	public function getAsQuery(
+		string $key,
+		?string $seperator = null,
+		?string $equals = null,
+		mixed $default = null
+	): Query
+	{
+		return new Query( $this->get( $key, $default ), $seperator, $equals );
 	}
 
 	/**
