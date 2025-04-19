@@ -164,12 +164,11 @@ class Url
 	 * Returns the value of the given key from the parsed URL.
 	 * 
 	 * @param string $key the key to be retrieved
-	 * @param mixed $default the default value if the key does not exist
 	 * @return mixed the value of the given key if it exists, null otherwise
 	 */
-	private function part( string $key, mixed $default = null ): mixed
+	private function part( string $key ): mixed
 	{
-		return ( $this->parts[ $key ] ?? $default ) ?: null;
+		return $this->parts[ $key ] ?? null;
 	}
 
 	/**
