@@ -58,10 +58,10 @@ class Auth implements JsonSerializable
 	/**
 	 * Sets the username of the user.
 	 * 
-	 * @param string $user The username of the user.
+	 * @param ?string $user The username of the user.
 	 * @return $this The object itself, for method chaining.
 	 */
-	public function setUser( string $user ): self
+	public function setUser( ?string $user ): self
 	{
 		$this->user = $user;
 		return $this;
@@ -70,10 +70,10 @@ class Auth implements JsonSerializable
 	/**
 	 * Sets the password of the user.
 	 *
-	 * @param string $pass The password of the user.
+	 * @param ?string $pass The password of the user.
 	 * @return $this The object itself, for method chaining.
 	 */
-	public function setPass( string $pass ): self
+	public function setPass( ?string $pass ): self
 	{
 		$this->pass = $pass;
 		return $this;
