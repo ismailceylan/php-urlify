@@ -97,6 +97,22 @@ class Host implements JsonSerializable
 	}
 
 	/**
+	 * Sets the array of top-level domains for the host.
+	 *
+	 * This method allows for the specification of valid top-level domains
+	 * that the host can recognize. The provided array of top-level domains
+	 * replaces any previously set list.
+	 *
+	 * @param array $tlds An array of top-level domains to set.
+	 * @return self The object itself.
+	 */
+	public function setTopLevelDomains( array $tlds = []): self
+	{
+		$this->tlds = $tlds;
+		return $this;
+	}
+
+	/**
 	 * Determines if the given domain is a valid top-level domain.
 	 *
 	 * This method checks if the given domain is listed in the Public Suffix List.
