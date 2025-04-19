@@ -311,4 +311,31 @@ class Url
 		return $this->scheme . $this->auth . $this->host . $this->port .
 			   $this->path . $this->query . $this->fragment;
 	}
+
+	/**
+	 * Converts the Url object to an associative array.
+	 *
+	 * @return array An associative array with the following keys:
+	 *               - scheme: The scheme of the URL.
+	 *               - user: The username of the URL.
+	 *               - pass: The password of the URL.
+	 *               - host: The host of the URL.
+	 *               - port: The port number of the URL.
+	 *               - path: The path of the URL.
+	 *               - query: The query string of the URL.
+	 *               - fragment: The fragment of the URL.
+	 */
+	public function toArray(): array
+	{
+		return [
+			'scheme'   => (string) $this->scheme,
+			'user'     => $this->auth->getUser(),
+			'pass'     => $this->auth->getPass(),
+			'host'     => (string) $this->host,
+			'port'     => $this->port->get(),
+			'path'     => (string) $this->path,
+			'query'    => (string) $this->query,
+			'fragment' => (string) $this->fragment,
+		];
+	}
 }
