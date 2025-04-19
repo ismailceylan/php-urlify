@@ -112,7 +112,7 @@ class Url
 	{
 		static::isValid( $url );
 
-		$this->parts = parse_url( $this->normalize( $url ));
+		$this->parts = parse_url( $this->normalize( $url )) ?: [];
 
 		$this->setScheme( $this->part( 'scheme' ));
 		$this->setHost( $this->part( 'host' ));
