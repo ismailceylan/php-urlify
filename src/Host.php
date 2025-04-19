@@ -45,6 +45,8 @@ class Host implements JsonSerializable
 	 */
 	public function __construct( ?string $host = null )
 	{
+		$this->setTopLevelDomains( require( 'resources/tlds.php' ));
+
 		if( $host )
 		{
 			$this->parse( $host );
@@ -122,11 +124,6 @@ class Host implements JsonSerializable
 	 */
 	public function isTopLevelDomain( string $domain ): bool
 	{
-		if( empty( $this->tlds ))
-		{
-			$this->tlds = require_once( 'resources/tlds.php' );
-		}
-
 		return in_array( $domain, $this->tlds );
 	}
 
