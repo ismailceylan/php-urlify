@@ -95,9 +95,8 @@ class Scheme implements JsonSerializable
 		bool $secure = false
 	): void
 	{
-		self::$schemes[] =
+		self::$schemes[ strtolower( $scheme )] =
 		[
-			'scheme' => strtolower( $scheme ),
 			'suffix' => $suffix,
 			'secure' => $secure
 		];
