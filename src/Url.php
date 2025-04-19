@@ -338,4 +338,39 @@ class Url
 			'fragment' => (string) $this->fragment,
 		];
 	}
+
+	/**
+	 * Creates a Url object from an associative array of URL components.
+	 *
+	 * This method takes an associative array containing URL components
+	 * such as scheme, user, pass, host, port, path, query, and fragment,
+	 * and sets these components to a new Url instance. If a component
+	 * is present in the array, it will be set on the Url object.
+	 *
+	 * @param array $parts An associative array with the following optional keys:
+	 *                     - scheme: The scheme of the URL.
+	 *                     - user: The username for authentication.
+	 *                     - pass: The password for authentication.
+	 *                     - host: The host of the URL.
+	 *                     - port: The port number of the URL.
+	 *                     - path: The path of the URL.
+	 *                     - query: The query string of the URL.
+	 *                     - fragment: The fragment of the URL.
+	 * @return self A Url object with components set from the provided array.
+	 */
+	public static function fromArray(array $parts): self
+	{
+		$url = new self;
+
+		isset( $parts['scheme']) && $url->setScheme( $parts['scheme']);
+		isset( $parts['user']) && $url->setUsername( $parts['user']);
+		isset( $parts['pass']) && $url->setPassword( $parts['pass']);
+		isset( $parts['host']) && $url->setHost( $parts['host']);
+		isset( $parts['port']) && $url->setPort((int) $parts['port']);
+		isset( $parts['path']) && $url->setPath( $parts['path']);
+		isset( $parts['query']) && $url->setQuery( $parts['query']);
+		isset( $parts['fragment']) && $url->setFragment( $parts['fragment']);
+
+		return $url;
+	}
 }
