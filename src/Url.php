@@ -112,7 +112,7 @@ class Url
 	 */
 	public function parse( string $url )
 	{
-		static::validate( $url );
+		static::isValid( $url );
 
 		$this->parts = parse_url( $this->normalize( $url ));
 
@@ -182,7 +182,7 @@ class Url
 	 * @param string $url the URL to be validated.
 	 * @throws InvalidArgumentException if the URL is invalid.
 	 */
-	static public function validate( string $url ): void
+	static public function isValid( string $url ): void
 	{
 		if( ! filter_var( $url, FILTER_VALIDATE_URL ) )
 		{
