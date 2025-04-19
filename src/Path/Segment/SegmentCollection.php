@@ -2,10 +2,12 @@
 
 namespace Iceylan\Urlify\Path\Segment;
 
+use Countable;
+
 /**
  * Represents a collection of segments of a path.
  */
-class SegmentCollection
+class SegmentCollection implements Countable
 {
 	/**
 	 * The segments of the path.
@@ -22,6 +24,16 @@ class SegmentCollection
 	public function __construct( array $segments = [])
 	{
 		$this->segments = $segments;
+	}
+
+	/**
+	 * Returns the number of segments in the collection.
+	 *
+	 * @return int The number of segments in the collection.
+	 */
+	public function count(): int
+	{
+		return count( $this->segments );
 	}
 
 	/**
