@@ -147,9 +147,9 @@ class Url
 	 * 
 	 * @param string $key the key to be retrieved
 	 * @param mixed $default the default value if the key does not exist
-	 * @return string|null the value of the given key if it exists, null otherwise
+	 * @return mixed the value of the given key if it exists, null otherwise
 	 */
-	private function part( string $key, mixed $default = null ): ?string
+	private function part( string $key, mixed $default = null ): mixed
 	{
 		return ( $this->parts[ $key ] ?? $default ) ?: null;
 	}
