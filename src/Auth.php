@@ -121,12 +121,12 @@ class Auth implements JsonSerializable
 
 		if( $this->user !== null )
 		{
-			$t .= $this->user;
+			$t .= rawurlencode( $this->user );
 		}
 
 		if( $this->pass !== null )
 		{
-			$t .= ':' . $this->pass;
+			$t .= ':' . rawurlencode( $this->pass );
 		}
 
 		if( $t !== '' )
