@@ -98,7 +98,7 @@ class Auth implements JsonSerializable
 	 * 
 	 * @return bool True if either the username or the password is set, false otherwise.
 	 */
-	public function hasAuth(): bool
+	public function isEmpty(): bool
 	{
 		return $this->user !== null || $this->pass !== null;
 	}
