@@ -191,6 +191,117 @@ class Url
 	}
 
 	/**
+	 * Sets the scheme of the URL.
+	 *
+	 * @param string $scheme the scheme to be set
+	 * @return self the current instance of the Url class
+	 */
+	public function setScheme( string $scheme ): self
+	{
+		$this->scheme->set( $scheme );
+		return $this;
+	}
+
+	/**
+	 * Sets the username of the user.
+	 * 
+	 * @param string $user the username to be set
+	 * @return self the current instance of the Url class
+	 */
+	public function setUsername( ?string $user = null ): self
+	{
+		$this->auth->setUser( $user );
+		return $this;
+	}
+
+	/**
+	 * Sets the password of the user.
+	 * 
+	 * @param string|null $pass The password to be set, or null to unset.
+	 * @return self The current instance of the Url class for method chaining.
+	 */
+	public function setPassword( ?string $pass = null ): self
+	{
+		$this->auth->setPass( $pass );
+		return $this;
+	}
+
+	/**
+	 * Sets the host of the URL.
+	 *
+	 * If the given host is null, the host is reset to null.
+	 * Otherwise, the given host is set as the host.
+	 *
+	 * @param ?string $host The host to be set, or null to unset.
+	 * @return self The current instance of the Url class.
+	 */
+	public function setHost( ?string $host = null ): self
+	{
+		$this->host->set( $host );
+		return $this;
+	}
+
+	/**
+	 * Sets the port number of the URL.
+	 *
+	 * If the given port number is null, the port number is reset to null.
+	 * Otherwise, the given port number is set as the port number.
+	 *
+	 * @param ?int $port The port number to set, or null to unset.
+	 * @return self The current instance of the Url class.
+	 */
+	public function setPort( ?int $port = null ): self
+	{
+		$this->port->set( $port );
+		return $this;
+	}
+
+	/**
+	 * Sets the path of the URL.
+	 *
+	 * If the given path is null, the path is reset to its default state.
+	 * Otherwise, the given path is set as the path.
+	 *
+	 * @param ?string $path The path to set, or null to unset.
+	 * @return self The current instance of the Url class for method chaining.
+	 */
+	public function setPath( ?string $path ): self
+	{
+		$this->path->set( $path );
+		return $this;
+	}
+	
+	/**
+	 * Sets the query string of the URL.
+	 *
+	 * If the given query string is null, the query string is reset to an empty string.
+	 * Otherwise, the given query string is parsed and set as the query string.
+	 *
+	 * @param string|null $query The query string to set, or null to unset.
+	 * @return self The current instance of the Url class for method chaining.
+	 */
+	public function setQuery( ?string $query = null ): self
+	{
+		$this->query->setRaw( $query );
+		return $this;
+	}
+
+	/**
+	 * Sets the fragment of the URL.
+	 *
+	 * If the given fragment is null, the fragment is reset to null.
+	 * Otherwise, the given fragment is set as the fragment.
+	 *
+	 * @param string|null $fragment The fragment to be set, or null to unset.
+	 * @return self The current instance of the Url class for method chaining.
+	 */
+	public function setFragment( ?string $fragment = null ): self
+	{
+		$this->fragment->set( $fragment );
+		return $this;
+	}
+
+	/**
 	 * Converts the Url object to a string.
 	 *
 	 * @return string the string representation of the Url object
