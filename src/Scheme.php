@@ -82,6 +82,7 @@ class Scheme implements JsonSerializable
 		$this->set( $scheme );
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * Registers a custom scheme.
 	 *
@@ -89,6 +90,8 @@ class Scheme implements JsonSerializable
 	 * @param string $suffix The suffix of the scheme, e.g., "://" or ":".
 	 * @param bool $secure Whether the scheme is secure or not.
 	 */
+=======
+>>>>>>> c4ca52ab650b982f322761b2dc34a696a2585494
 	public static function registerScheme(
 		string $scheme,
 		string $suffix = '://',
@@ -103,12 +106,15 @@ class Scheme implements JsonSerializable
 		];
 	}
 
+<<<<<<< HEAD
 	/**
 	 * Gets a scheme from the list of registered schemes.
 	 *
 	 * @param string $scheme The scheme to be retrieved, e.g., "http" or "https".
 	 * @return ?array The scheme definition, or null if the scheme is unknown.
 	 */
+=======
+>>>>>>> c4ca52ab650b982f322761b2dc34a696a2585494
 	public static function getScheme( string $scheme ): ?array
 	{
 		return static::$schemes[ $scheme ] ?? null;
