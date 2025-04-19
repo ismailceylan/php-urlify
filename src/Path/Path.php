@@ -183,6 +183,19 @@ class Path implements JsonSerializable
 	}
 
 	/**
+	 * Returns the resolved path.
+	 *
+	 * The resolved path is a normalized path that has been collapsed to remove
+	 * any relative segments. For example, "/foo/bar/../baz" becomes "/foo/baz".
+	 *
+	 * @return string The resolved path.
+	 */
+	public function resolve(): string
+	{
+		return implode( '/', $this->getNormalizedSegments());
+	}
+
+	/**
 	 * Returns the segment at the specified index.
 	 *
 	 * @param int $index the index of the segment
