@@ -321,9 +321,9 @@ class Host implements JsonSerializable
 	 * Retrieves the subdomain name from the host.
 	 *
 	 * The subdomain name is the string representation of the subdomains array,
-	 * joined by dots.
+	 * joined by dots. Returns null if no subdomain exists.
 	 *
-	 * @return string The subdomain name.
+	 * @return ?string The subdomain name.
 	 */
 	public function getSubdomainName(): ?string
 	{
