@@ -88,19 +88,17 @@ class Url
 	{
 		$this->options = $options;
 
+		$this->scheme = new Scheme;
+		$this->auth = new Auth;
+		$this->host = new Host;
+		$this->port = new Port( null, $this->scheme );
+		$this->path = new Path;
+		$this->query = new Query;
+		$this->fragment = new Fragment;
+		
 		if( $url !== null )
 		{
 			$this->parse( $url );	
-		}
-		else
-		{
-			$this->scheme = new Scheme;
-			$this->auth = new Auth;
-			$this->host = new Host;
-			$this->port = new Port( null, $this->scheme );
-			$this->path = new Path;
-			$this->query = new Query;
-			$this->fragment = new Fragment;
 		}
 	}
 
@@ -116,30 +114,14 @@ class Url
 
 		$this->parts = parse_url( $this->normalize( $url ));
 
-		$this->scheme = new Scheme( $this->part( 'scheme', '' ));
-		$this->host = new Host( $this->part( 'host' ));
-
-		$this->auth = new Auth(
-			$this->part( 'user' ),
-			$this->part( 'pass' ) 
-		);
-
-		$this->port = new Port(
-			$this->part( 'port' ),
-			$this->scheme
-		);
-
-		$this->path = new Path(
-			$this->part( 'path', '' )
-		);
-
-		$this->query = new Query(
-			$this->part( 'query' )
-		);
-
-		$this->fragment = new Fragment(
-			$this->part( 'fragment' )
-		);
+		$this->setScheme( $this->part( 'scheme' ));
+		$this->setHost( $this->part( 'host' ));
+		$this->setUsername( $this->part( 'user' ));
+		$this->setPassword( $this->part( 'pass' ));
+		$this->setPort( $this->part( 'port' ));
+		$this->setPath( $this->part( 'path' ));
+		$this->setQuery( $this->part( 'query' ));
+		$this->setFragment( $this->part( 'fragment' ));
 	}
 
 	/**
