@@ -120,12 +120,12 @@ class Url
 		$this->host = new Host( $this->part( 'host' ));
 
 		$this->auth = new Auth(
-			$this->part( 'user', null ),
-			$this->part( 'pass', null ) 
+			$this->part( 'user' ),
+			$this->part( 'pass' ) 
 		);
 
 		$this->port = new Port(
-			$this->part( 'port', null ),
+			$this->part( 'port' ),
 			$this->scheme
 		);
 
