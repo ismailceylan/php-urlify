@@ -17,81 +17,59 @@ class Scheme implements JsonSerializable
 	private ?string $scheme;
 
 	/**
-	 * An array of known schemes.
-	 * 
+	 * An array of custom schemes.
+	 *
 	 * @var array
 	 */
-	protected const KNOWN_SCHEMES =
+	private static array $schemes =
 	[
 		// web protocols
-		'http',
-		'https',
-		'ws',
-		'wss',
+		'http' => [ 'suffix' => '://', 'secure' => false ],
+		'https' => [ 'suffix' => '://', 'secure' => true ],
+		'ws' => [ 'suffix' => '://', 'secure' => false ],
+		'wss' => [ 'suffix' => '://', 'secure' => true ],
 
 		// file transfer protocols
-		'ftp',
-		'ftps',
-		'sftp',
-		'scp',
-		'tftp',
-
+		'ftp' => [ 'suffix' => '://', 'secure' => false ],
+		'ftps' => [ 'suffix' => '://', 'secure' => true ],
+		'sftp' => [ 'suffix' => '://', 'secure' => false ],
+		'scp' => [ 'suffix' => '://', 'secure' => false ],
+		'tftp' => [ 'suffix' => '://', 'secure' => false ],
+		
 		// database connection protocols
-		'mysql',
-		'pgsql',
-		'postgres',
-		'sqlite',
-		'mongodb',
-		'redis',
-		'mssql',
+		'mysql' => [ 'suffix' => '://', 'secure' => false ],
+		'pgsql' => [ 'suffix' => '://', 'secure' => false ],
+		'postgres' => [ 'suffix' => '://', 'secure' => false ],
+		'sqlite' => [ 'suffix' => '://', 'secure' => false ],
+		'mongodb' => [ 'suffix' => '://', 'secure' => false ],
+		'redis' => [ 'suffix' => '://', 'secure' => false ],
+		'mssql' => [ 'suffix' => '://', 'secure' => false ],
 
 		// application & service protocols
-		'ssh',
-		'telnet',
-		'ldap',
-		'smb',
-		'nfs',
+		'ssh' => [ 'suffix' => '://', 'secure' => false ],
+		'telnet' => [ 'suffix' => '://', 'secure' => false ],
+		'ldap' => [ 'suffix' => '://', 'secure' => false ],
+		'smb' => [ 'suffix' => '://', 'secure' => false ],
+		'nfs' => [ 'suffix' => '://', 'secure' => false ],
 
 		// email and communication protocols
-		'mailto',
-		'tel',
-		'sms',
-		'sip',
+		'mailto' => [ 'suffix' => ':', 'secure' => false ],
+		'tel' => [ 'suffix' => ':', 'secure' => false ],
+		'sms' => [ 'suffix' => ':', 'secure' => false ],
+		'sip' => [ 'suffix' => ':', 'secure' => false ],
 
 		// file system and special URI protocols
-		'file',
-		'data',
-		'blob',
-		'urn',
+		'file' => [ 'suffix' => ':', 'secure' => false ],
+		'data' => [ 'suffix' => ':', 'secure' => false ],
+		'blob' => [ 'suffix' => ':', 'secure' => false ],
+		'urn' => [ 'suffix' => ':', 'secure' => false ],
 
 		// other (some platforms or frameworks use these)
-		'chrome',
-		'about',
-		'geo',
-		'javascript',
-		'intent',
-    ];
-
-	/**
-	 * An array of schemes that have a colon prefix.
-	 * 
-	 * @var array
-	 */
-	const COLON_SCHEMES = [
-		'mailto',
-		'tel',
-		'sms',
-		'sip',
-		'urn',
-		'data',
-		'blob',
-		'geo',
-		'about',
-		'javascript',
-		'intent',
-		'ssh',
-		'scp',
-		'sqlite',
+		'chrome' => [ 'suffix' => ':', 'secure' => false ],
+		'about' => [ 'suffix' => ':', 'secure' => false ],
+		'geo' => [ 'suffix' => ':', 'secure' => false ],
+		'javascript' => [ 'suffix' => ':', 'secure' => false ],
+		'intent' => [ 'suffix' => ':', 'secure' => false ]
 	];
 
 	/**
@@ -102,6 +80,25 @@ class Scheme implements JsonSerializable
 	public function __construct( ?string $scheme = null )
 	{
 		$this->set( $scheme );
+	}
+	
+	public static function registerScheme(
+		string $scheme,
+		string $suffix = '://',
+		bool $secure = false
+	): void
+	{
+		self::$schemes[] =
+		[
+			'scheme' => strtolower( $scheme ),
+			'suffix' => $suffix,
+			'secure' => $secure
+		];
+	}
+
+	public static function getScheme( string $scheme ): ?array
+	{
+		return static::$schemes[ $scheme ] ?? null;
 	}
 
 	/**
@@ -136,7 +133,9 @@ class Scheme implements JsonSerializable
 	 */
 	public function isSecure(): bool
 	{
-		return $this->scheme === 'https';
+		return $this->isKnown()
+			? static::getScheme( $this->scheme )[ 'secure' ]
+			: false;
 	}
 
 	/**
@@ -146,7 +145,7 @@ class Scheme implements JsonSerializable
 	 */
 	public function isKnown(): bool
 	{
-		return in_array( $this->scheme, self::KNOWN_SCHEMES );
+		return in_array( $this->scheme, array_keys( static::$schemes ));
 	}
 
 	/**
@@ -158,7 +157,11 @@ class Scheme implements JsonSerializable
 	{
 		return $this->scheme === null
 			? ''
-			: $this->scheme . ( in_array( $this->scheme, self::COLON_SCHEMES )? ':' : '://' );
+			: $this->scheme . (
+				$this->isKnown()
+					? static::getScheme( $this->scheme )[ 'suffix' ]
+					: '://'
+			);
 	}
 
 	/**
