@@ -265,6 +265,113 @@ class Url
 	}
 
 	/**
+	 * Builds the scheme of the URL using a callback function.
+	 *
+	 * The callback function is called with the Url's scheme object as its argument.
+	 *
+	 * @param callable $builder The callback function to build the scheme.
+	 * @return self The current instance of the Url class for method chaining.
+	 */
+	public function buildScheme( callable $builder ): self
+	{
+		$builder( $this->scheme );
+		return $this;
+	}
+
+	/**
+	 * Builds the authentication parts of the URL using a callback function.
+	 *
+	 * The callback function is called with the Url's Auth object as its argument.
+	 * The callback function can then use the Auth object's methods to build the
+	 * authentication parts of the URL.
+	 *
+	 * @param callable $builder The callback function to build the authentication parts.
+	 * @return self The current instance of the Url class for method chaining.
+	 */
+	public function buildAuth( callable $builder ): self
+	{
+		$builder( $this->auth );
+		return $this;
+	}
+
+	/**
+	 * Builds the host of the URL using a callback function.
+	 *
+	 * The callback function is called with the Url's Host object as its argument.
+	 * The callback function can then use the Host object's methods to build the host.
+	 *
+	 * @param callable $builder The callback function to build the host.
+	 * @return self The current instance of the Url class for method chaining.
+	 */
+	public function buildHost( callable $builder ): self
+	{
+		$builder( $this->host );
+		return $this;
+	}
+
+	/**
+	 * Builds the port of the URL using a callback function.
+	 *
+	 * The callback function is called with the Url's Port object as its argument.
+	 * The callback function can then use the Port object's methods to build the port.
+	 *
+	 * @param callable $builder The callback function to build the port.
+	 * @return self The current instance of the Url class for method chaining.
+	 */
+	public function buildPort( callable $builder ): self
+	{
+		$builder( $this->port );
+		return $this;
+	}
+
+	/**
+	 * Builds the path of the URL using a callback function.
+	 *
+	 * The callback function is called with the Url's path object as its argument.
+	 * The callback function can then use the path object's methods to build the path.
+	 *
+	 * @param callable $builder The callback function to build the path.
+	 * @return self The current instance of the Url class for method chaining.
+	 */
+	public function buildPath( callable $builder ): self
+	{
+		$builder( $this->path );
+		return $this;
+	}
+
+	/**
+	 * Builds the query string of the URL using a callback function.
+	 *
+	 * The callback function is called with the Url's Query object as its argument.
+	 * The callback function can then use the Query object's methods to build the
+	 * query string.
+	 *
+	 * @param callable $builder The callback function to build the query string.
+	 * @return self The current instance of the Url class for method chaining.
+	 */
+	public function buildQuery( callable $builder ): self
+	{
+		$builder( $this->query );
+		return $this;
+	}
+
+	/**
+	 * Builds the fragment of the URL using a callback function.
+	 *
+	 * The callback function is called with the Url's Fragment object as its argument.
+	 * The callback function can then use the Fragment object's methods to build the
+	 * fragment.
+	 *
+	 * @param callable $builder The callback function to build the fragment.
+	 * @return self The current instance of the Url class for method chaining.
+	 */
+	public function buildFragment( callable $builder ): self
+	{
+		$builder( $this->fragment );
+		return $this;
+	}
+
+	/**
 	 * Converts the Url object to a string.
 	 *
 	 * @return string the string representation of the Url object
