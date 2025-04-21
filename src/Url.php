@@ -16,13 +16,6 @@ class Url
 	private int $options;
 
 	/**
-	 * The parts of the URL.
-	 *
-	 * @var array
-	 */
-	private array $parts;
-
-	/**
 	 * The scheme of the URL.
 	 *
 	 * @var Scheme
