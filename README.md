@@ -289,9 +289,12 @@ echo $url;
 ---
 
 ## 🔸 Scheme
-The `scheme` (also known as "protocol") represents the beginning of the URL and indicates how resources should be fetched (`http`, `https`, `ftp`, etc.).
+The `scheme` (also known as "protocol") represents the beginning of a URL and indicates how resources should be accessed, for example: `http`, `https`, `ftp`, etc.
 
-The `Url::$scheme` property holds an instance of the `Iceylan\Urlify\Scheme` class, which allows more than just reading or setting the value.
+The `Url::$scheme` property holds an instance of the `Iceylan\Urlify\Scheme` class, which allows both manipulation and introspection of the scheme.
+
+### 📥 Instantiating
+Accessing via `Url` object:
 
 ```php
 use Iceylan\Urlify\Url;
@@ -299,7 +302,7 @@ use Iceylan\Urlify\Url;
 $scheme = ( new Url( 'https://example.com' ))->scheme;
 ```
 
-`Scheme` class can be used standalone as well:
+Using `Scheme` class standalone:
 
 ```php
 use Iceylan\Urlify\Scheme;
@@ -307,75 +310,72 @@ use Iceylan\Urlify\Scheme;
 $scheme = new Scheme( 'https' );
 ```
 
-Or even you can instantiate it without a value:
+Without an initial value:
 
 ```php
 $scheme = new Scheme;
 ```
 
-### Getting the scheme
-If the scheme is not set, it will return null, otherwise, it will return the scheme.
+### 👁️ Getting the Scheme
+You can retrieve the current scheme:
 
 ```php
 $scheme->get(); // 'https'
 (string) $scheme; // 'https://'
 ```
 
-### Setting the scheme
+If not set, it returns null or an empty string on cast.
+
+### ✍️ Setting the scheme
+Set the scheme value:
+
 ```php
 $scheme->set( 'tel' );
 (string) $scheme; // 'tel:'
 ```
 
-Or directly via Url:
+Or set it through Url:
 
 ```php
 $url->setScheme( 'sms' );
 (string) $url; // 'sms:'
 ```
 
-Urlify reconizes the known schemes and automatically appends the correct suffix.
+`Urlify` reconizes the known schemes and automatically appends the correct suffix.
 
-### Cleaning the scheme
-Sometimes, you may want to clear the scheme.
+### 🧹 Cleaning the scheme
+Clear the scheme completely:
 
 ```php
 $scheme->clean();
 (string) $scheme; // ''
 ```
 
-Or you can set it directly to null:
+Alternative methods:
 
 ```php
 $scheme->set( null );
-(string) $scheme; // ''
-```
-
-Or you can set it directly to null on a Url:
-
-```php
 $url->setScheme( null );
-(string) $url; // 'example.com'
 ```
 
-### Is the scheme secure?
-Sometimes, you may want to check if the scheme is secure.
+### 🔐 Is the scheme secure?
+Check whether the scheme is marked as secure:
 
 ```php
 $scheme->set( 'ftp' )->isKnown(); // false
 $scheme->set( 'ftps' )->isKnown(); // true
 ```
 
-### Is the scheme known?
-Sometimes, you may want to check if the scheme is known.
+### 🤔 Is the scheme known?
+Determine if the scheme is one of the known/registered ones:
 
 ```php
 $scheme->set( 'mysql' )->isKnown(); // true
 $scheme->set( 'asgardia' )->isKnown(); // false
 ```
 
-### Registering a custom scheme
-Sometimes, you may want to register a custom scheme.
+### ➕ Registering a custom scheme
+Custom schemes can be registered globally:
 
 ```php
 Scheme::registerScheme( name: 'asgardia', suffix: '://', secure: true );
@@ -388,14 +388,15 @@ $scheme->isSecure(); // true
 (string) $scheme; // 'asgardia://'
 ```
 
-### JSON Serialization
+### 🔄 JSON Serialization
 `Scheme` objects can be serialized to JSON.
 
 ```php
 json_encode( $scheme );
 ```
 
-The result will be:
+Yields:
+
 ```JSON
 {
 	"name": "asgardia",
@@ -408,7 +409,10 @@ The result will be:
 ---
 
 ## 🔸 Auth
-The `auth` property holds an instance of the `Iceylan\Urlify\Auth` class which they represent the authentication parts of the URL.
+The `auth` property holds an instance of the `Iceylan\Urlify\Auth` class which represents the authentication part of a URL (i.e., `username:password@`).
+
+### 📥 Instantiating
+You can access the auth part directly via the `Url` instance:
 
 ```php
 use Iceylan\Urlify\Url;
@@ -416,7 +420,7 @@ use Iceylan\Urlify\Url;
 $auth = ( new Url( 'https://username:password@example.com' ))->auth;
 ```
 
-`Auth` class can be used standalone as well:
+Or use the `Auth` class directly:
 
 ```php
 use Iceylan\Urlify\Auth;
@@ -424,22 +428,25 @@ use Iceylan\Urlify\Auth;
 $auth = new Auth( 'username', 'password' );
 ```
 
-Or even you can instantiate it without a value:
+Or even instantiate without any credentials:
 
 ```php
 $auth = new Auth;
 ```
 
-### Getting the Username and Password
-You can get the username and password. If the username or password is not set, it will return null, otherwise, it will return the username and password.
+### 👁️ Reading Username and Password
+You can retrieve the username and password values separately.
 
 ```php
 $auth->getUser(); // 'username'
 $auth->getPass(); // 'password'
 ```
 
-### Setting the Username and Password
-You can set the username and password.
+If either is not set, null is returned.
+
+
+### ✍️ Setting Username and Password
+Credentials can be set individually or together:
 
 ```php
 // You can set simultaneously
@@ -451,32 +458,27 @@ $auth->setPass( '1234' );
 echo $auth; // 'root:1234@'
 ```
 
-Or directly via Url:
+You can also do this directly on the Url object:
 
 ```php
 $url->setAuth( 'username', 'password' );
 ```
 
-If the only one of the username or the password is set, the output will be accordingly.
+Partial values are supported:
 
 ```php
 echo $url->auth->set( 'username', null ); // 'username@'
-```
-
-or 
-
-```php
 echo $url->auth->set( null, 'password' ); // ':password@'
 ```
 
-### Cleaning the Username and Password
-Sometimes, you may want to clear the username and password.
+### 🧹 Cleaning Credentials
+Clear all authentication data with:
 
 ```php
 $auth->clean();
 ```
 
-Or you can set it directly to null:
+Or reset via setters:
 
 ```php
 // clear simultaneously
@@ -487,21 +489,40 @@ $auth->setUser( null );
 $auth->setPass( null );
 ```
 
-Or you can set it directly to null on a Url:
+On Url:
 
 ```php
 $url->setAuth( null, null );
 ```
 
-and the output:
+Output will be:
 
 ```php
 echo $auth; // ''
 ```
 
-### Checking If Authentication Is Empty
-Sometimes, you may want to check if the authentication is empty.
+### ❓ Check If Empty
+Determine whether the auth section is currently empty:
 
 ```php
-$auth->isEmpty(); // true
+$auth->isEmpty(); // true or false
 ```
+
+### 📤 JSON Serialization
+`Auth` objects can be converted into JSON.
+
+```php
+json_encode( $auth );
+```
+
+Result:
+
+```JSON
+{
+	"user": "username",
+	"pass": "password"
+}
+```
+
+---
+
