@@ -139,6 +139,16 @@ class Scheme implements JsonSerializable
 	}
 
 	/**
+	 * Resets the scheme to null.
+	 *
+	 * @return self The current instance of the Scheme class.
+	 */
+	public function clean(): self
+	{
+		return $this->set( null );
+	}
+
+	/**
 	 * Determines if the scheme is secure.
 	 *
 	 * @return bool True if the scheme is "https", false otherwise.
