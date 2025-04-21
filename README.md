@@ -41,6 +41,8 @@ All of these classes are designed to be loosely coupled and easily testable.
   Most methods support chaining, enabling fluent and predictable transformations.
 - **Query Intelligence**  
   Flags (`?foo&bar=baz`) and key-value entries are separately handled via `QueryEntry`.
+- **Path Segments as Query**
+  The path segments can be parsed as a query object.
 - **Fragment as Query**  
   The fragment part (`#...`) can be parsed as a query object as well, useful for hash-based routing in SPAs.
 - **JSON Serializable**  
@@ -83,7 +85,7 @@ use Iceylan\Urlify\Fragment;
 ---
 
 ## ⚡ Quick Example
-Let’s say you have a URL where a **query string is embedded inside a path segment**, and let's make it more compicated and add another level of nesting. Now let's say you want to extract a value from it.
+Let’s say you have a URL where a **query string is embedded inside a path segment**. Let's make it more compicated and add another level of nesting with a different separation. Now let's say you want to extract a value from that messy URL.
 
 ```php
 use Iceylan\Urlify\Url;
@@ -91,20 +93,20 @@ use Iceylan\Urlify\Query\Query;
 
 // The URL we're working with
 $url = new Url(
-	'https://example.com/track/other-stuff/utm_source=github&utm_medium=target:readme|foo:bar/its-me'
+    'https://example.com/something/utm_medium=target:readme|foo:bar&utm_source=github/its-me'
 );
 
 // Get the dataset as a Query object (we can use negative indexes)
-$pathSegmentAsQuery = $url->path->getSegmentAsQuery( -2 );
+$segmentAsQuery = $url->path->getSegmentAsQuery( -2 );
 
 // Extract the utm_source value as a Query object
-$utmMediumAsQuery = $pathSegmentAsQuery->getAsQuery( 'utm_medium', '|', ':' );
+$utmSourceAsQuery = $segmentAsQuery->getAsQuery( 'utm_medium', '|', ':' );
 
 // access the target key's value
-echo $utmMediumAsQuery->get( 'target' ); // "readme"
+echo $utmSourceAsQuery->get( 'target' ); // "readme"
 ```
 
-We can easily chain the above code into a single line:
+We can easily chain the above code into a single liner:
 
 ```php
 echo $url
@@ -142,12 +144,14 @@ $url->query;
 $url->fragment;
 ```
 
-You can also cast the URL object to string directly:
+### 🔹 String Conversion
+You can also cast the URL object into string directly:
 
 ```php
 echo $url; // Outputs: https://example.com:8080/users/profile?view=full#section1
 ```
 
+### 🔹 JSON Conversion
 Or you can also convert it to an array:
 
 ```php
@@ -166,6 +170,7 @@ var_dump( $url->toArray());
 // ]
 ```
 
+### 🔹 JSON Serialization
 And finally, you can convert it to JSON:
 
 ```php
