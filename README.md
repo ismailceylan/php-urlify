@@ -413,7 +413,7 @@ The `auth` property holds an instance of the `Iceylan\Urlify\Auth` class which t
 ```php
 use Iceylan\Urlify\Url;
 
-$auth = ( new Url( 'https://username:password@localhost' ))->auth;
+$auth = ( new Url( 'https://username:password@example.com' ))->auth;
 ```
 
 `Auth` class can be used standalone as well:
@@ -439,3 +439,69 @@ $auth->getPass(); // 'password'
 ```
 
 ### Setting the Username and Password
+You can set the username and password.
+
+```php
+// You can set simultaneously
+$auth->set( 'username', 'password' );
+
+$auth->setUser( 'root' );
+$auth->setPass( '1234' );
+
+echo $auth; // 'root:1234@'
+```
+
+Or directly via Url:
+
+```php
+$url->setAuth( 'username', 'password' );
+```
+
+If the only one of the username or the password is set, the output will be accordingly.
+
+```php
+echo $url->auth->set( 'username', null ); // 'username@'
+```
+
+or 
+
+```php
+echo $url->auth->set( null, 'password' ); // ':password@'
+```
+
+### Cleaning the Username and Password
+Sometimes, you may want to clear the username and password.
+
+```php
+$auth->clean();
+```
+
+Or you can set it directly to null:
+
+```php
+// clear simultaneously
+$auth->set( null, null );
+
+// clear separately
+$auth->setUser( null );
+$auth->setPass( null );
+```
+
+Or you can set it directly to null on a Url:
+
+```php
+$url->setAuth( null, null );
+```
+
+and the output:
+
+```php
+echo $auth; // ''
+```
+
+### Checking If Authentication Is Empty
+Sometimes, you may want to check if the authentication is empty.
+
+```php
+$auth->isEmpty(); // true
+```
