@@ -99,11 +99,11 @@ $url = new Url(
 // Get the dataset as a Query object (we can use negative indexes)
 $segmentAsQuery = $url->path->getSegmentAsQuery( -2 );
 
-// Extract the utm_source value as a Query object
-$utmSourceAsQuery = $segmentAsQuery->getAsQuery( 'utm_medium', '|', ':' );
+// Extract the utm_medium value as a Query object
+$mediumAsQuery = $segmentAsQuery->getAsQuery( 'utm_medium', '|', ':' );
 
 // access the target key's value
-echo $utmSourceAsQuery->get( 'target' ); // "readme"
+echo $mediumAsQuery->get( 'target' ); // "readme"
 ```
 
 We can easily chain the above code into a single liner:
@@ -144,6 +144,23 @@ $url->query;
 $url->fragment;
 ```
 
+### 🔹 Modifying the URL
+We can set a value for a segment and the value we give it will be parsed.
+
+All setters return $this, so they support method chaining:
+
+```php
+echo $url
+    ->setHost( 'iceylan.dev' )
+    ->setScheme( 'http' )
+    ->setPort( 3000 )
+    ->setFragment( 'new-section' );
+
+// Output: http://iceylan.dev:3000/users/profile?view=full#new-section
+```
+
+Each component (path, query, fragment) has its own powerful interface. In the next sections, we'll dive deeper into those.
+
 ### 🔹 String Conversion
 You can also cast the URL object into string directly:
 
@@ -151,7 +168,7 @@ You can also cast the URL object into string directly:
 echo $url; // Outputs: https://example.com:8080/users/profile?view=full#section1
 ```
 
-### 🔹 JSON Conversion
+### 🔹 Array Conversion
 Or you can also convert it to an array:
 
 ```php
@@ -215,24 +232,7 @@ and output:
 }
 ```
 
-### 🔹 Modifying the URL
-We can set a value for a segment and the value we give it will be parsed.
-
-All setters return $this, so they support method chaining:
-
-```php
-echo $url
-    ->setHost( 'iceylan.dev' )
-    ->setScheme( 'http' )
-    ->setPort( 3000 )
-    ->setFragment( 'new-section' );
-
-// Output: http://iceylan.dev:3000/users/profile?view=full#new-section
-```
-
-Each component (path, query, fragment) has its own powerful interface. In the next sections, we'll dive deeper into those.
-
-## Builder Mode
+## 🧩 Builder Mode
 You can also use Urlify as a URL builder. It's a simple way to create URLs from scratch. Here's an example:
 
 ```php
