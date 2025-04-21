@@ -200,7 +200,8 @@ class Scheme implements JsonSerializable
 		[
 			'name' => $this->scheme,
 			'isSecure' => $this->isSecure(),
-			'isKnown' => $this->isKnown()
+			'isKnown' => $this->isKnown(),
+			'suffix' => static::getScheme( $this->scheme )[ 'suffix' ] ?? '://'
 		];
 	}
 }
