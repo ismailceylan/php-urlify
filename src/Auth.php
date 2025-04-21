@@ -94,6 +94,20 @@ class Auth implements JsonSerializable
 	}
 
 	/**
+	 * Resets the Auth object to its initial state.
+	 *
+	 * Sets both the username and password of the Auth object to null.
+	 *
+	 * @return self The object itself, for method chaining.
+	 */
+	public function clean(): self
+	{
+		$this->user = null;
+		$this->pass = null;
+		return $this;
+	}
+
+	/**
 	 * Checks if the Auth object has either a username or a password set.
 	 * 
 	 * @return bool True if either the username or the password is set, false otherwise.
