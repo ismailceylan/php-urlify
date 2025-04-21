@@ -1,7 +1,7 @@
 # Urlify
 **Urlify** is a lightweight, object-oriented PHP library designed for parsing, manipulating, and reconstructing URLs in a highly modular and intuitive way.
 
-It provides fine-grained access to every component of a URL—such as scheme, authorization, host, path, query, and fragment—through dedicated classes. Unlike typical URL parsers that only offer string-based access, Urlify structures these components as first-class objects, enabling more powerful and flexible manipulations.
+It provides fine-grained access to every component of a URL, such as scheme, authorization, host, path, query, and fragment through dedicated classes. Unlike typical URL parsers that only offer string-based access, Urlify structures these components as first-class objects, enabling more powerful and flexible manipulations.
 
 ---
 
@@ -35,17 +35,17 @@ All of these classes are designed to be loosely coupled and easily testable.
 ---
 
 ## 🔧 Primary Features
-- 🔍 **Full URL Parsing**  
+- **Full URL Parsing**  
   Create a `Url` object from a string and instantly access all parts via method calls.
-- 🧬 **Immutable-Friendly API**  
+- **Immutable-Friendly API**  
   Most methods support chaining, enabling fluent and predictable transformations.
-- 🧠 **Query Intelligence**  
+- **Query Intelligence**  
   Flags (`?foo&bar=baz`) and key-value entries are separately handled via `QueryEntry`.
-- 🎯 **Fragment as Query**  
+- **Fragment as Query**  
   The fragment part (`#...`) can be parsed as a query object as well, useful for hash-based routing in SPAs.
-- 🧪 **JSON Serializable**  
+- **JSON Serializable**  
   All components can be converted to structured arrays or serialized into JSON easily.
-- 🧰 **Object-Oriented Everything**  
+- **Object-Oriented Everything**  
   No need to use `parse_url()` and `http_build_query()` manually anymore.
 
 ---
@@ -108,10 +108,10 @@ We can easily chain the above code into a single line:
 
 ```php
 echo $url
-		->path
-		->getSegmentAsQuery( -2 )
-		->getAsQuery( 'utm_medium', '|', ':' )
-		->get( 'target' );
+        ->path
+        ->getSegmentAsQuery( -2 )
+        ->getAsQuery( 'utm_medium', '|', ':' )
+        ->get( 'target' );
 // readme
 ```
 
@@ -176,37 +176,37 @@ and output:
 
 ```json
 {
-	"scheme":{
-		"name": "https",
-		"isSecure": true,
-		"isKnown": true
-	},
-	"auth": {
-		"user": "user",
-		"pass": "pass"
-	},
-	"host": {
-		"subdomains": [],
-		"subdomainName": null,
-		"primaryDomainName": "example",
-		"topLevelDomain": "com",
-		"rootDomain": "example.com"
-	},
-	"port": {
-		"address": 8080,
-		"effective": 8080
-	},
-	"path": {
-		"rawSegments": [ "", "users", "", "foo", "..", "profile" ],
-		"resolvedSegments": [ "users", "profile" ]
-	},
-	"query": {
-		"view": [ "full" ]
-	},
-	"fragment": {
-		"fragment": "section1",
-		"asQuery": null
-	}
+    "scheme":{
+        "name": "https",
+        "isSecure": true,
+        "isKnown": true
+    },
+    "auth": {
+        "user": "user",
+        "pass": "pass"
+    },
+    "host": {
+        "subdomains": [],
+        "subdomainName": null,
+        "primaryDomainName": "example",
+        "topLevelDomain": "com",
+        "rootDomain": "example.com"
+    },
+    "port": {
+        "address": 8080,
+        "effective": 8080
+    },
+    "path": {
+        "rawSegments": [ "", "users", "", "foo", "..", "profile" ],
+        "resolvedSegments": [ "users", "profile" ]
+    },
+    "query": {
+        "view": [ "full" ]
+    },
+    "fragment": {
+        "fragment": "section1",
+        "asQuery": null
+    }
 }
 ```
 
@@ -217,7 +217,7 @@ All setters return $this, so they support method chaining:
 
 ```php
 echo $url
-	->setHost( 'iceylan.dev' )
+    ->setHost( 'iceylan.dev' )
     ->setScheme( 'http' )
     ->setPort( 3000 )
     ->setFragment( 'new-section' );
@@ -227,18 +227,18 @@ echo $url
 
 Each component (path, query, fragment) has its own powerful interface. In the next sections, we'll dive deeper into those.
 
-## Url Builder Mode
+## Builder Mode
 You can also use Urlify as a URL builder. It's a simple way to create URLs from scratch. Here's an example:
 
 ```php
 use Iceylan\Urlify\Url;
 
 echo ( new Url )
-	->setScheme( 'ws' )
-	->setHost( 'example.com' )
-	->setPath( '/users/profile' )
-	->setQuery( 'view=full&flag' )
-	->setFragment( 'section1' );
+    ->setScheme( 'ws' )
+    ->setHost( 'example.com' )
+    ->setPath( '/users/profile' )
+    ->setQuery( 'view=full&flag' )
+    ->setFragment( 'section1' );
 
 // Outputs: wa://example.com/users/profile?view=full&flag#section1
 ```
@@ -249,13 +249,106 @@ You can also use segment handlers to modify them more precisely:
 use Iceylan\Urlify\Url;
 
 $url = ( new Url )
-	->setScheme( 'ws' )
-	->setHost( 'example.com' );
+    ->setScheme( 'ws' )
+    ->setHost( 'example.com' );
 
 $url->path
-	->append( 'profile' )
-	->prepend( 'users' );
+    ->append( 'profile' )
+    ->prepend( 'users' );
 
 echo $url;
 // Outputs: ws://example.com/users/profile
+```
+
+## 🔸 Scheme
+The `scheme` (also known as "protocol") represents the beginning of the URL and indicates how resources should be fetched (`http`, `https`, `ftp`, etc.).
+
+The `Url::$scheme` property holds an instance of the `Iceylan\Urlify\Scheme` class, which allows more than just reading or setting the value.
+
+```php
+use Iceylan\Urlify\Url;
+
+$scheme = ( new Url( 'https://example.com' ))->scheme;
+```
+
+### Getting the scheme
+```php
+$scheme->get(); // 'https'
+(string) $scheme; // 'https://'
+```
+
+### Setting the scheme
+```php
+$scheme->set( 'tel' );
+(string) $scheme; // 'tel:'
+```
+
+Or directly via Url:
+
+```php
+$url->setScheme( 'sms' );
+(string) $url; // 'sms:'
+```
+
+Urlify reconizes the known schemes and automatically appends the correct suffix.
+
+### Cleaning the scheme
+Sometimes, you may want to clear the scheme.
+
+```php
+$scheme->clean();
+(string) $scheme; // ''
+```
+
+Or you can set it directly to null:
+
+```php
+$scheme->set( null );
+(string) $scheme; // ''
+```
+
+### Is the scheme secure?
+Sometimes, you may want to check if the scheme is secure.
+
+```php
+$scheme->set( 'ftp' )->isKnown(); // false
+$scheme->set( 'ftps' )->isKnown(); // true
+```
+
+### Is the scheme known?
+Sometimes, you may want to check if the scheme is known.
+
+```php
+$scheme->set( 'mysql' )->isKnown(); // true
+$scheme->set( 'asgardia' )->isKnown(); // false
+```
+
+### Registering a custom scheme
+Sometimes, you may want to register a custom scheme.
+
+```php
+Scheme::registerScheme( name: 'asgardia', suffix: '://', secure: true );
+
+$scheme->set( 'asgardia' );
+
+$scheme->isKnown(); // true
+$scheme->isSecure(); // true
+
+(string) $scheme; // 'asgardia://'
+```
+
+### JSON Serialization
+`Scheme` objects can be serialized to JSON.
+
+```php
+json_encode( $scheme );
+```
+
+The result will be:
+```JSON
+{
+	"name": "asgardia",
+	"isSecure": true,
+	"isKnown": true
+}
 ```
