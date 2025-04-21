@@ -59,6 +59,8 @@ All of these classes are designed to be loosely coupled and easily testable.
 - Build router-like logic for backend or frontend integration
 - Serialize or debug complex URLs in JSON format
 
+---
+
 ## 📦 Installation
 Urlify can be installed via [Composer](https://getcomposer.org/), the standard PHP dependency manager.
 
@@ -232,8 +234,10 @@ and output:
 }
 ```
 
+---
+
 ## 🧩 Builder Mode
-You can also use Urlify as a URL builder. It's a simple way to create URLs from scratch. Here's an example:
+You can also use Urlify as a URL builder. It's a simple way to create URLs from scratch.
 
 ```php
 use Iceylan\Urlify\Url;
@@ -248,7 +252,7 @@ echo ( new Url )
 // Outputs: wa://example.com/users/profile?view=full&flag#section1
 ```
 
-You can also use segment handlers to modify them more precisely:
+You can also use component methods to modify them more precisely:
 
 ```php
 use Iceylan\Urlify\Url;
@@ -265,6 +269,25 @@ echo $url;
 // Outputs: ws://example.com/users/profile
 ```
 
+We can also keep the chain alive:
+
+```php
+$url = ( new Url )
+    ->setScheme( 'ws' )
+    ->setHost( 'example.com' )
+	->buildPath( fn ( $path ) =>
+		$path
+			->append( 'profile' )
+			->prepend( 'users' )
+	)
+	->setQuery( 'view=full&flag' );
+
+echo $url;
+// Outputs: ws://example.com/users/profile?view=full&flag
+```
+
+---
+
 ## 🔸 Scheme
 The `scheme` (also known as "protocol") represents the beginning of the URL and indicates how resources should be fetched (`http`, `https`, `ftp`, etc.).
 
@@ -276,7 +299,23 @@ use Iceylan\Urlify\Url;
 $scheme = ( new Url( 'https://example.com' ))->scheme;
 ```
 
+`Scheme` class can be used standalone as well:
+
+```php
+use Iceylan\Urlify\Scheme;
+
+$scheme = new Scheme( 'https' );
+```
+
+Or even you can instantiate it without a value:
+
+```php
+$scheme = new Scheme;
+```
+
 ### Getting the scheme
+If the scheme is not set, it will return null, otherwise, it will return the scheme.
+
 ```php
 $scheme->get(); // 'https'
 (string) $scheme; // 'https://'
@@ -310,6 +349,13 @@ Or you can set it directly to null:
 ```php
 $scheme->set( null );
 (string) $scheme; // ''
+```
+
+Or you can set it directly to null on a Url:
+
+```php
+$url->setScheme( null );
+(string) $url; // 'example.com'
 ```
 
 ### Is the scheme secure?
@@ -353,7 +399,43 @@ The result will be:
 ```JSON
 {
 	"name": "asgardia",
+	"suffix": "://",
 	"isSecure": true,
 	"isKnown": true
 }
 ```
+
+---
+
+## 🔸 Auth
+The `auth` property holds an instance of the `Iceylan\Urlify\Auth` class which they represent the authentication parts of the URL.
+
+```php
+use Iceylan\Urlify\Url;
+
+$auth = ( new Url( 'https://username:password@localhost' ))->auth;
+```
+
+`Auth` class can be used standalone as well:
+
+```php
+use Iceylan\Urlify\Auth;
+
+$auth = new Auth( 'username', 'password' );
+```
+
+Or even you can instantiate it without a value:
+
+```php
+$auth = new Auth;
+```
+
+### Getting the Username and Password
+You can get the username and password. If the username or password is not set, it will return null, otherwise, it will return the username and password.
+
+```php
+$auth->getUser(); // 'username'
+$auth->getPass(); // 'password'
+```
+
+### Setting the Username and Password
