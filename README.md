@@ -275,12 +275,12 @@ We can also keep the chain alive:
 $url = ( new Url )
     ->setScheme( 'ws' )
     ->setHost( 'example.com' )
-	->buildPath( fn ( $path ) =>
-		$path
-			->append( 'profile' )
-			->prepend( 'users' )
-	)
-	->setQuery( 'view=full&flag' );
+    ->buildPath( fn ( $path ) =>
+        $path
+            ->append( 'profile' )
+            ->prepend( 'users' )
+    )
+    ->setQuery( 'view=full&flag' );
 
 echo $url;
 // Outputs: ws://example.com/users/profile?view=full&flag
@@ -362,8 +362,8 @@ $url->setScheme( null );
 Check whether the scheme is marked as secure:
 
 ```php
-$scheme->set( 'ftp' )->isKnown(); // false
-$scheme->set( 'ftps' )->isKnown(); // true
+$scheme->set( 'ftp' )->isSecure(); // false
+$scheme->set( 'ftps' )->isSecure(); // true
 ```
 
 ### 🤔 Is the scheme known?
@@ -389,7 +389,7 @@ $scheme->isSecure(); // true
 ```
 
 ### 🔄 JSON Serialization
-`Scheme` objects can be serialized to JSON.
+`Scheme` objects can be serialized into JSON.
 
 ```php
 json_encode( $scheme );
@@ -443,7 +443,6 @@ $auth->getPass(); // 'password'
 ```
 
 If either is not set, null is returned.
-
 
 ### ✍️ Setting Username and Password
 Credentials can be set individually or together:
@@ -526,3 +525,118 @@ Result:
 
 ---
 
+## 🔸 Host
+The `host` component of a URL specifies the domain address that identifies the resource's location on the network. In `Urlify`, the `host` property is an instance of the `Iceylan\Urlify\Host` class, providing methods for manipulation and inspection of the host part.
+
+This library uses a top-level domain name list to separate the top-level domain names. It doesn't just extract the latest segment of a dot separated string and treat it as a top-level domain. With this approach, we know `co.uk` is a top-level domain name.
+
+### 📥 Instantiating
+Accessing via `Url` object:
+
+```php
+use Iceylan\Urlify\Url;
+
+$host = ( new Url( 'https://example.com' ))->host;
+```
+
+Using Host class standalone:
+
+```php
+use Iceylan\Urlify\Host;
+
+$host = new Host( 'www.foo.example.co.uk' );
+```
+
+Without an initial value:
+
+```php
+$host = new Host;
+```
+
+### 👁️ Retrieving Host Parts
+After setting the host, you can retrieve host parts by meaningful methods.
+
+```php
+$host->getSubdomainName();      // www.foo
+$host->getSubdomains();         // ['www', 'foo']
+$host->getPrimaryDomainName();  // example
+$host->getTopLevelDomainName(); // co.uk
+$host->getRootDomainName();     // example.co.uk
+```
+
+If any of these is not set, `null` is returned.
+
+### ✍️ Manupulating Host
+You can manipulate the host parts with powerful methods.
+
+#### Set Host As a Whole String
+Sometimes setting the host with a whole string is can be enough for you. We have a method for this:
+
+```php
+echo $host->set( 'subdomain.example.com' );
+// 'subdomain.example.com'
+```
+
+When the set method is called, parsing processes will be start for given host and all the getters will return the parsed values.
+
+```php
+echo $url->setHost( 'api.example.com' );
+// 'https://api.example.com'
+```
+
+#### Subdomain Manipulations
+Sometimes you need to set the subdomain as a whole string. We have a method for this:
+
+```php
+echo $host->setSubdomain( null ); // example.com
+echo $host->setSubdomain( 'bar.baz.qux' ); // bar.baz.qux.example.com
+```
+
+You may also need to append or prepend subdomains using the `appendSubdomain` and `prependSubdomain` methods.
+
+```php
+echo $host->appendSubdomain( 'zoo' ); // bar.baz.qux.zoo.example.com
+echo $host->prependSubdomain( 'chat' ); // chat.bar.baz.qux.zoo.example.com
+```
+
+#### Primary Domain Manipulations
+You can also set the primary domain name with the `setPrimaryDomainName` method:
+
+```php
+echo $host->setPrimaryDomainName( 'exam' ); // chat.bar.baz.qux.zoo.exam.com
+```
+
+#### Top Level Domain Manipulations
+You can also set the top-level domain name with the `setTopLevelDomainName` method:
+
+```php
+echo $host->setTopLevelDomainName( 'co.uk' ); // chat.bar.baz.qux.zoo.exam.co.uk
+```
+
+### 🧹 Clearing the Host
+Clear the host completely:
+
+```php
+echo $host->clean(); // ''
+```
+
+### 📤 JSON Serialization
+`Host` objects can be converted into JSON.
+
+```php
+json_encode( $host );
+```
+
+Result:
+
+```JSON
+{
+	"subdomainName": "chat.bar.baz.qux.zoo",
+	"subdomains": [ "chat", "bar", "baz", "qux", "zoo" ],
+	"primaryDomainName": "exam",
+	"rootDomain": "exam.co.uk",
+	"topLevelDomain": "co.uk"
+}
+```
+
+---
