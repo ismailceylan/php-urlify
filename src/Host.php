@@ -310,11 +310,7 @@ class Host implements JsonSerializable
 	 */
 	public function clean(): self
 	{
-		$this->subdomains = [];
-		$this->primaryDomainName = null;
-		$this->topLevelDomainName = null;
-
-		return $this;
+		return $this->set( null );
 	}
 
 	/**
