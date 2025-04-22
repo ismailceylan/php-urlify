@@ -24,52 +24,52 @@ class Scheme implements JsonSerializable
 	private static array $schemes =
 	[
 		// web protocols
-		'http' => [ 'suffix' => '://', 'secure' => false ],
-		'https' => [ 'suffix' => '://', 'secure' => true ],
-		'ws' => [ 'suffix' => '://', 'secure' => false ],
-		'wss' => [ 'suffix' => '://', 'secure' => true ],
+		'http' => [ 'suffix' => '://', 'secure' => false, 'port' => 80 ],
+		'https' => [ 'suffix' => '://', 'secure' => true, 'port' => 443 ],
+		'ws' => [ 'suffix' => '://', 'secure' => false, 'port' => 80 ],
+		'wss' => [ 'suffix' => '://', 'secure' => true, 'port' => 443 ],
 
 		// file transfer protocols
-		'ftp' => [ 'suffix' => '://', 'secure' => false ],
-		'ftps' => [ 'suffix' => '://', 'secure' => true ],
-		'sftp' => [ 'suffix' => '://', 'secure' => false ],
-		'scp' => [ 'suffix' => '://', 'secure' => false ],
-		'tftp' => [ 'suffix' => '://', 'secure' => false ],
+		'ftp' => [ 'suffix' => '://', 'secure' => false, 'port' => 21 ],
+		'ftps' => [ 'suffix' => '://', 'secure' => true, 'port' => 990 ],
+		'sftp' => [ 'suffix' => '://', 'secure' => false, 'port' => 22 ],
+		'scp' => [ 'suffix' => '://', 'secure' => false, 'port' => 22 ],
+		'tftp' => [ 'suffix' => '://', 'secure' => false, 'port' => 69 ],
 		
 		// database connection protocols
-		'mysql' => [ 'suffix' => '://', 'secure' => false ],
-		'pgsql' => [ 'suffix' => '://', 'secure' => false ],
-		'postgres' => [ 'suffix' => '://', 'secure' => false ],
-		'sqlite' => [ 'suffix' => '://', 'secure' => false ],
-		'mongodb' => [ 'suffix' => '://', 'secure' => false ],
-		'redis' => [ 'suffix' => '://', 'secure' => false ],
-		'mssql' => [ 'suffix' => '://', 'secure' => false ],
+		'mysql' => [ 'suffix' => '://', 'secure' => false, 'port' => 3306 ],
+		'pgsql' => [ 'suffix' => '://', 'secure' => false, 'port' => 5432 ],
+		'postgres' => [ 'suffix' => '://', 'secure' => false, 'port' => 5432 ],
+		'sqlite' => [ 'suffix' => '://', 'secure' => false, 'port' => null ],
+		'mongodb' => [ 'suffix' => '://', 'secure' => false, 'port' => 27017 ],
+		'redis' => [ 'suffix' => '://', 'secure' => false, 'port' => 6379 ],
+		'mssql' => [ 'suffix' => '://', 'secure' => false, 'port' => 1433 ],
 
 		// application & service protocols
-		'ssh' => [ 'suffix' => '://', 'secure' => false ],
-		'telnet' => [ 'suffix' => '://', 'secure' => false ],
-		'ldap' => [ 'suffix' => '://', 'secure' => false ],
-		'smb' => [ 'suffix' => '://', 'secure' => false ],
-		'nfs' => [ 'suffix' => '://', 'secure' => false ],
+		'ssh' => [ 'suffix' => '://', 'secure' => false, 'port' => 22 ],
+		'telnet' => [ 'suffix' => '://', 'secure' => false, 'port' => null ],
+		'ldap' => [ 'suffix' => '://', 'secure' => false, 'port' => 389 ],
+		'smb' => [ 'suffix' => '://', 'secure' => false, 'port' => 445 ],
+		'nfs' => [ 'suffix' => '://', 'secure' => false, 'port' => 2049 ],
 
 		// email and communication protocols
-		'mailto' => [ 'suffix' => ':', 'secure' => false ],
-		'tel' => [ 'suffix' => ':', 'secure' => false ],
-		'sms' => [ 'suffix' => ':', 'secure' => false ],
-		'sip' => [ 'suffix' => ':', 'secure' => false ],
+		'mailto' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
+		'tel' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
+		'sms' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
+		'sip' => [ 'suffix' => ':', 'secure' => false, 'port' => 5060 ],
 
 		// file system and special URI protocols
-		'file' => [ 'suffix' => ':', 'secure' => false ],
-		'data' => [ 'suffix' => ':', 'secure' => false ],
-		'blob' => [ 'suffix' => ':', 'secure' => false ],
-		'urn' => [ 'suffix' => ':', 'secure' => false ],
+		'file' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
+		'data' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
+		'blob' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
+		'urn' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
 
 		// other (some platforms or frameworks use these)
-		'chrome' => [ 'suffix' => ':', 'secure' => false ],
-		'about' => [ 'suffix' => ':', 'secure' => false ],
-		'geo' => [ 'suffix' => ':', 'secure' => false ],
-		'javascript' => [ 'suffix' => ':', 'secure' => false ],
-		'intent' => [ 'suffix' => ':', 'secure' => false ]
+		'chrome' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
+		'about' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
+		'geo' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
+		'javascript' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
+		'intent' => [ 'suffix' => ':', 'secure' => false, 'port' => null ],
 	];
 
 	/**
