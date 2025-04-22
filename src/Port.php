@@ -89,7 +89,7 @@ class Port implements JsonSerializable
 	 *
 	 * @return int|null The effective port number.
 	 */
-	public function getEffective(): ?int
+	public function getDefault(): ?int
     {
         if( $this->port !== null )
 		{
@@ -145,19 +145,15 @@ class Port implements JsonSerializable
 	/**
 	 * Converts the object to an array.
 	 *
-	 * The array contains two elements, 'port' and 'effective'. The 'port'
-	 * element contains the port number that was explicitly set, or null if
-	 * no port number was set. The 'effective' element contains the effective
-	 * port number to use, which is either the explicitly set port number or
-	 * the default port number for the scheme.
-	 *
-	 * @return array The port number and the effective port number.
+	 * @return array An associative array containing the following keys:
+	 *  - address: The port number as a string.
+	 *  - default: The default port number for the scheme as an integer.
 	 */
 	public function toArray(): array
 	{
 		return [
 			'address' => $this->get(),
-			'effective' => $this->getEffective()
+			'default' => $this->getDefault()
 		];
 	}
 }
