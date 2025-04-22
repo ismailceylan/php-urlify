@@ -301,6 +301,23 @@ class Host implements JsonSerializable
 	}
 
 	/**
+	 * Resets the host to its default state.
+	 *
+	 * The host is reset by setting the subdomains to an empty array, and the
+	 * primary domain name and top-level domain name to null.
+	 *
+	 * @return self The object itself.
+	 */
+	public function clean(): self
+	{
+		$this->subdomains = [];
+		$this->primaryDomainName = null;
+		$this->topLevelDomainName = null;
+
+		return $this;
+	}
+
+	/**
 	 * Converts the object to a string representation.
 	 *
 	 * The string representation of the object is in the format of
