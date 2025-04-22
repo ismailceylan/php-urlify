@@ -631,7 +631,7 @@ Result:
 ```
 
 ---
-
+ 
 ## 🔸 Port
 The `port` component of a URL specifies the port number used for communication with the resource.
 
