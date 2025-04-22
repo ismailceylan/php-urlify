@@ -1,4 +1,4 @@
-# Urlify
+## Urlify
 **Urlify** is a lightweight, object-oriented PHP library designed for parsing, manipulating, and reconstructing URLs in a highly modular and intuitive way.
 
 It provides fine-grained access to every component of a URL, such as scheme, authorization, host, path, query, and fragment through dedicated classes. Unlike typical URL parsers that only offer string-based access, Urlify structures these components as first-class objects, enabling more powerful and flexible manipulations.
