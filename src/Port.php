@@ -85,11 +85,11 @@ class Port implements JsonSerializable
 	 * Returns the effective port number.
 	 *
 	 * If the port number is explicitly set, it will be returned. Otherwise,
-	 * the default port number for the scheme will be returned.
+	 * the effective port number for the scheme will be returned.
 	 *
 	 * @return int|null The effective port number.
 	 */
-	public function getDefault(): ?int
+	public function getEffective(): ?int
     {
         if( $this->port !== null )
 		{
@@ -143,7 +143,7 @@ class Port implements JsonSerializable
 	{
 		return [
 			'address' => $this->get(),
-			'default' => $this->getDefault()
+			'effective' => $this->getEffective()
 		];
 	}
 }
