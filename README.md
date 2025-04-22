@@ -269,7 +269,7 @@ echo $url;
 // Outputs: ws://example.com/users/profile
 ```
 
-We can also keep the chain alive:
+We can also keep the chain alive with builder methods, for example:
 
 ```php
 $url = ( new Url )
@@ -330,15 +330,13 @@ If not set, it returns null or an empty string on cast.
 Set the scheme value:
 
 ```php
-$scheme->set( 'tel' );
-(string) $scheme; // 'tel:'
+echo $scheme->set( 'tel' ); // 'tel:'
 ```
 
 Or set it through Url:
 
 ```php
-$url->setScheme( 'sms' );
-(string) $url; // 'sms:'
+echo $url->setScheme( 'sms' ); // 'sms:'
 ```
 
 `Urlify` reconizes the known schemes and automatically appends the correct suffix.
@@ -347,15 +345,14 @@ $url->setScheme( 'sms' );
 Clear the scheme completely:
 
 ```php
-$scheme->clean();
-(string) $scheme; // ''
+echo $scheme->clean(); // ''
 ```
 
 Alternative methods:
 
 ```php
-$scheme->set( null );
-$url->setScheme( null );
+echo $scheme->set( null ); // ''
+echo $url->setScheme( null ); // ''
 ```
 
 ### 🔐 Is the scheme secure?
@@ -385,7 +382,7 @@ $scheme->set( 'asgardia' );
 $scheme->isKnown(); // true
 $scheme->isSecure(); // true
 
-(string) $scheme; // 'asgardia://'
+echo $scheme; // 'asgardia://'
 ```
 
 ### 🔄 JSON Serialization
@@ -451,19 +448,14 @@ Credentials can be set individually or together:
 // You can set simultaneously
 $auth->set( 'username', 'password' );
 
+// Or separately
 $auth->setUser( 'root' );
 $auth->setPass( '1234' );
 
 echo $auth; // 'root:1234@'
 ```
 
-You can also do this directly on the Url object:
-
-```php
-$url->setAuth( 'username', 'password' );
-```
-
-Partial values are supported:
+Partial credentials are also supported:
 
 ```php
 echo $url->auth->set( 'username', null ); // 'username@'
@@ -480,7 +472,7 @@ $auth->clean();
 Or reset via setters:
 
 ```php
-// clear simultaneously
+// equivalent to clean method
 $auth->set( null, null );
 
 // clear separately
@@ -491,17 +483,12 @@ $auth->setPass( null );
 On Url:
 
 ```php
-$url->setAuth( null, null );
-```
-
-Output will be:
-
-```php
-echo $auth; // ''
+// echo triggers Url::__toString method
+echo $url->setUsername( null )->setPassword( null ); // ''
 ```
 
 ### ❓ Check If Empty
-Determine whether the auth section is currently empty:
+Determine whether the auth section (both username and password) is currently empty:
 
 ```php
 $auth->isEmpty(); // true or false
@@ -528,10 +515,10 @@ Result:
 ## 🔸 Host
 The `host` component of a URL specifies the domain address that identifies the resource's location on the network. In `Urlify`, the `host` property is an instance of the `Iceylan\Urlify\Host` class, providing methods for manipulation and inspection of the host part.
 
-This library uses a top-level domain name list to separate the top-level domain names. It doesn't just extract the latest segment of a dot separated string and treat it as a top-level domain. With this approach, we know `co.uk` is a top-level domain name.
+This library uses a list of top-level domain names to separate the top-level domain names. It doesn't just take the latest part of a string separated by dots and treat it as the main domain. This approach tells us that `co.uk` is a top-level domain name.
 
 ### 📥 Instantiating
-Accessing via `Url` object:
+Accessing host instance via `Url` object:
 
 ```php
 use Iceylan\Urlify\Url;
@@ -577,7 +564,9 @@ echo $host->set( 'subdomain.example.com' );
 // 'subdomain.example.com'
 ```
 
-When the set method is called, parsing processes will be start for given host and all the getters will return the parsed values.
+When the set method is called, parsing processes will be start for given host and all the getter methods will return the parsed values.
+
+You can also set the host directly on the `Url` object:
 
 ```php
 echo $url->setHost( 'api.example.com' );
@@ -589,28 +578,28 @@ Sometimes you need to set the subdomain as a whole string. We have a method for 
 
 ```php
 echo $host->setSubdomain( null ); // example.com
-echo $host->setSubdomain( 'bar.baz.qux' ); // bar.baz.qux.example.com
+echo $host->setSubdomain( 'bar.baz' ); // bar.baz.example.com
 ```
 
-You may also need to append or prepend subdomains using the `appendSubdomain` and `prependSubdomain` methods.
+You may also need to append or prepend existing subdomains.
 
 ```php
-echo $host->appendSubdomain( 'zoo' ); // bar.baz.qux.zoo.example.com
-echo $host->prependSubdomain( 'chat' ); // chat.bar.baz.qux.zoo.example.com
+echo $host->appendSubdomain( 'zoo' ); // bar.baz.zoo.example.com
+echo $host->prependSubdomain( 'chat' ); // chat.bar.baz.zoo.example.com
 ```
 
 #### Primary Domain Manipulations
 You can also set the primary domain name with the `setPrimaryDomainName` method:
 
 ```php
-echo $host->setPrimaryDomainName( 'exam' ); // chat.bar.baz.qux.zoo.exam.com
+echo $host->setPrimaryDomainName( 'exam' ); // chat.bar.baz.zoo.exam.com
 ```
 
 #### Top Level Domain Manipulations
 You can also set the top-level domain name with the `setTopLevelDomainName` method:
 
 ```php
-echo $host->setTopLevelDomainName( 'co.uk' ); // chat.bar.baz.qux.zoo.exam.co.uk
+echo $host->setTopLevelDomainName( 'co.uk' ); // chat.bar.baz.zoo.exam.co.uk
 ```
 
 ### 🧹 Clearing the Host
@@ -618,6 +607,8 @@ Clear the host completely:
 
 ```php
 echo $host->clean(); // ''
+// or
+echo $host->set( null ); // ''
 ```
 
 ### 📤 JSON Serialization
@@ -636,6 +627,98 @@ Result:
 	"primaryDomainName": "exam",
 	"rootDomain": "exam.co.uk",
 	"topLevelDomain": "co.uk"
+}
+```
+
+---
+
+## 🔸 Port
+The `port` component of a URL specifies the port number used for communication with the resource.
+
+### 📥 Instantiating
+Accessing port instance via `Url` object:
+
+```php
+use Iceylan\Urlify\Url;
+
+$port = ( new Url( 'https://example.com:8001' ))->port;
+```
+
+Using Port class standalone:
+
+```php
+use Iceylan\Urlify\Port;
+
+$port = new Port( 8001 );
+```
+
+Without an initial value:
+
+```php
+$port = new Port;
+```
+
+### 👁️ Retrieving Port
+After setting the port, you can retrieve the port with the `get` method:
+
+```php
+$port->get(); // 8001
+```
+
+If the port is not set, `null` is returned.
+
+### ✍️ Setting Port
+You can set the port with the `set` method:
+
+```php
+echo $port->set( 8001 ); // ':8001'
+```
+
+### Checking if Port is Defined
+You can check if the port is defined with the `isEmpty` method:
+
+```php
+echo $port->isEmpty(); // false
+```
+
+### Retrieving Effective Port
+You can retrieve the effective port with the `getEffective` method. Effective port is the port set or the default port for the scheme if the port is not set.
+
+```php
+echo $port->getEffective(); // 8001
+```
+
+### Default Port
+You can use `Port` class to query the default port for a given scheme:
+
+```php
+use Iceylan\Urlify\Port;
+
+echo Port::getDefaultPortForScheme( 'https' ); // 443
+```
+
+### 🧹 Clearing the Port
+Clear the port completely:
+
+```php
+echo $port->clean(); // ''
+// or
+echo $port->set( null ); // ''
+```
+
+### 📤 JSON Serialization
+`Port` objects can be converted into JSON.
+
+```php
+json_encode( $port );
+```
+
+Result:
+
+```JSON
+{
+    "address" => null,
+    "effective" => 443
 }
 ```
 
