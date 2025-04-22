@@ -119,17 +119,7 @@ class Port implements JsonSerializable
 	 */
 	public static function defaultPortForScheme( string $scheme ): ?int
     {
-        return match( $scheme )
-		{
-            'http', 'ws' => 80,
-            'https', 'wss' => 443,
-            'ftp' => 21,
-            'ssh' => 22,
-            'mysql' => 3306,
-            'pgsql', 'postgres' => 5432,
-            'redis' => 6379,
-            default => null,
-        };
+		return Scheme::getScheme( $scheme )[ 'port' ] ?? null;
     }
 
 	/**
