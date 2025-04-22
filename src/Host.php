@@ -252,7 +252,7 @@ class Host implements JsonSerializable
 	 * @param string $subdomain The subdomain to add.
 	 * @return self The object itself.
 	 */
-	public function pushSubdomain( string $subdomain ): self
+	public function appendSubdomain( string $subdomain ): self
 	{
 		$this->subdomains[] = $subdomain;
 		return $this;
