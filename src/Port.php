@@ -76,7 +76,7 @@ class Port implements JsonSerializable
 	 *
 	 * @return bool True if the port is defined, false otherwise.
 	 */
-	public function isDefined(): bool
+	public function isEmpty(): bool
 	{
 		return $this->port !== null;
 	}
