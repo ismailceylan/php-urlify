@@ -96,7 +96,7 @@ class Port implements JsonSerializable
             return $this->port;
         }
 
-        return self::defaultPortForScheme( $this->scheme );
+        return self::getDefaultPortForScheme( $this->scheme );
     }
 
 	/**
@@ -108,7 +108,7 @@ class Port implements JsonSerializable
 	public function isDefault(): bool
 	{
 		return $this->port !== null &&
-			$this->port === self::defaultPortForScheme( $this->scheme );
+			$this->port === self::getDefaultPortForScheme( $this->scheme );
 	}
 
 	/**
@@ -117,7 +117,7 @@ class Port implements JsonSerializable
 	 * @param string $scheme The scheme to retrieve the default port number for.
 	 * @return int|null The default port number if the scheme is supported, null otherwise.
 	 */
-	public static function defaultPortForScheme( string $scheme ): ?int
+	public static function getDefaultPortForScheme( string $scheme ): ?int
     {
 		return Scheme::getScheme( $scheme )[ 'port' ] ?? null;
     }
