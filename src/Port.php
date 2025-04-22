@@ -123,6 +123,16 @@ class Port implements JsonSerializable
     }
 
 	/**
+	 * Clears the port number, setting it to null.
+	 *
+	 * @return self The current instance for method chaining.
+	 */
+	public function clean(): self
+	{
+		return $this->set( null );
+	}
+
+	/**
 	 * Converts the object to an array for JSON serialization.
 	 *
 	 * @return array The port number.
